@@ -19,10 +19,10 @@
 
 enum area_name
 {
-    GAME,
-    LOOTING,
-    INVENTORY,
-    MAP,
+    PGINFO_KEYBIND_BUTTON,
+    ESC_LOOTING_BUTTON,
+    ESC_INVENTORY_BUTTON,
+    M_MAP_BUTTON,
 
     AREAS_NUM
 };
@@ -31,9 +31,9 @@ typedef enum area_name area_name_t;
 struct apex_game_filter_context
 {
     PIX *image;
-    PIX *references[AREAS_NUM];
+    PIX *banner_references[BANNER_POSITION_NUM];
     obs_source_t *source;
-    obs_weak_source_t *target_sources[AREAS_NUM];
+    obs_weak_source_t *target_sources[BANNER_POSITION_NUM];
     uint8_t *video_data;
     uint32_t video_linesize;
     uint32_t width;
@@ -53,32 +53,32 @@ struct area
 };
 typedef struct area area_t;
 
-#define GAME_BOX_X          90
-#define GAME_BOX_Y          1034
-#define GAME_BOX_W          20
-#define GAME_BOX_H          20
+#define PGINFO_KEYBIND_BUTTON_X         90
+#define PGINFO_KEYBIND_BUTTON_Y         1034
+#define PGINFO_KEYBIND_BUTTON_W         20
+#define PGINFO_KEYBIND_BUTTON_H         20
 
-#define LOOTING_BOX_X       530
-#define LOOTING_BOX_Y       971
-#define LOOTING_BOX_W       37
-#define LOOTING_BOX_H       15
+#define ESC_LOOTING_BUTTON_X            530
+#define ESC_LOOTING_BUTTON_Y            971
+#define ESC_LOOTING_BUTTON_W            37
+#define ESC_LOOTING_BUTTON_H            15
 
-#define INVENTORY_BOX_X     67
-#define INVENTORY_BOX_Y     1042
-#define INVENTORY_BOX_W     37
-#define INVENTORY_BOX_H     15
+#define ESC_INVENTORY_BUTTON_X          67
+#define ESC_INVENTORY_BUTTON_Y          1042
+#define ESC_INVENTORY_BUTTON_W          37
+#define ESC_INVENTORY_BUTTON_H          15
 
-#define MAP_BOX_X           62
-#define MAP_BOX_Y           1036
-#define MAP_BOX_W           24
-#define MAP_BOX_H           24
+#define M_MAP_BUTTON_X                  62
+#define M_MAP_BUTTON_Y                  1036
+#define M_MAP_BUTTON_W                  24
+#define M_MAP_BUTTON_H                  24
 
 static const area_t areas[AREAS_NUM] =
 {
-    [GAME] =        { GAME_BOX_X,       GAME_BOX_Y,        GAME_BOX_W,        GAME_BOX_H         },
-    [LOOTING] =     { LOOTING_BOX_X,    LOOTING_BOX_Y,     LOOTING_BOX_W,     LOOTING_BOX_H      },
-    [INVENTORY] =   { INVENTORY_BOX_X,  INVENTORY_BOX_Y,   INVENTORY_BOX_W,   INVENTORY_BOX_H    },
-    [MAP] =         { MAP_BOX_X,        MAP_BOX_Y,         MAP_BOX_W,         MAP_BOX_H          },
+    [PGINFO_KEYBIND_BUTTON] =   { PGINFO_KEYBIND_BUTTON_X,      PGINFO_KEYBIND_BUTTON_Y,    PGINFO_KEYBIND_BUTTON_W,    PGINFO_KEYBIND_BUTTON_H     },
+    [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X,         ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
+    [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X,       ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
+    [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
 };
 
 static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned height, area_name_t an)
@@ -99,16 +99,14 @@ static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned 
     }
 }
 
-static float is_on_screen(PIX *image, PIX *references[3], area_name_t an)
+static float compare_psnr_value_of_area(PIX *image, PIX *reference, area_name_t an)
 {
-    float psnr;
-
     const struct area *a = &areas[an];
-    PIX *reference = references[an];
 
     BOX *box = boxCreate(a->x, a->y, a->w, a->h);
     PIX *rectangle = pixClipRectangle(image, box, NULL);
 
+    float psnr;
     pixGetPSNR(rectangle, reference, 1, &psnr);
 
     boxDestroy(&box);
@@ -122,18 +120,20 @@ static const char *apex_game_filter_get_name(void *unused)
     return "Apex Game";
 }
 
-static void check_area(apex_game_filter_context_t *filter, area_name_t an)
+static bool check_banner(apex_game_filter_context_t *filter, area_name_t an, banner_position_t bp)
 {
     obs_weak_source_t *source = filter->target_sources[an];
     obs_source_t *s = obs_weak_source_get_source(source);
 
     fill_area(filter->image, filter->video_data, filter->width, filter->height, an);
-    float psnr = is_on_screen(filter->image, filter->references, an);
+    float psnr = compare_psnr_value_of_area(filter->image, filter->banner_references[bp], an);
 
     bool enable_target_source = psnr > 100;
     obs_source_set_enabled(s, enable_target_source);
 
     obs_source_release(s);
+
+    return enable_target_source;
 }
 
 static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t cy)
@@ -194,10 +194,10 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     if (!gs_stagesurface_map(filter->stagesurface, &filter->video_data, &filter->video_linesize))
         return;
 
-    check_area(filter, GAME);
-    check_area(filter, LOOTING);
-    check_area(filter, INVENTORY);
-    check_area(filter, MAP);
+    check_banner(filter, PGINFO_KEYBIND_BUTTON, BANNER_GAME);
+    check_banner(filter, ESC_LOOTING_BUTTON, BANNER_LOOTING);
+    check_banner(filter, ESC_INVENTORY_BUTTON, BANNER_INVENTORY);
+    check_banner(filter, M_MAP_BUTTON, BANNER_MAP);
 }
 
 static void update_source(obs_data_t *settings, const char *set_name, obs_weak_source_t **s)
@@ -236,10 +236,10 @@ static void apex_game_filter_update(void *data, obs_data_t *settings)
 
     binfo("update");
 
-    update_source(settings, "game_source", &filter->target_sources[GAME]);
-    update_source(settings, "looting_source", &filter->target_sources[LOOTING]);
-    update_source(settings, "inventory_source", &filter->target_sources[INVENTORY]);
-    update_source(settings, "map_source", &filter->target_sources[MAP]);
+    update_source(settings, "game_source", &filter->target_sources[PGINFO_KEYBIND_BUTTON]);
+    update_source(settings, "looting_source", &filter->target_sources[ESC_LOOTING_BUTTON]);
+    update_source(settings, "inventory_source", &filter->target_sources[ESC_INVENTORY_BUTTON]);
+    update_source(settings, "map_source", &filter->target_sources[M_MAP_BUTTON]);
 }
 
 static void apex_game_filter_defaults(obs_data_t *settings)
@@ -259,10 +259,10 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
 
     context->image = pixCreate(1920, 1080, 32);
 
-    context->references[GAME] = pixReadMemBmp(ref_game_bmp, ref_game_bmp_size);
-    context->references[LOOTING] = pixReadMemBmp(ref_looting_bmp, ref_looting_bmp_size);
-    context->references[INVENTORY] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
-    context->references[MAP] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
+    context->banner_references[PGINFO_KEYBIND_BUTTON] = pixReadMemBmp(ref_game_bmp, ref_game_bmp_size);
+    context->banner_references[ESC_LOOTING_BUTTON] = pixReadMemBmp(ref_looting_bmp, ref_looting_bmp_size);
+    context->banner_references[ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
+    context->banner_references[M_MAP_BUTTON] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
 
     apex_game_filter_update(context, settings);
 
@@ -292,17 +292,17 @@ static void apex_game_filter_destroy(void *data)
 
     pixDestroy(&context->image);
 
-    pixDestroy(&context->references[GAME]);
-    pixDestroy(&context->references[LOOTING]);
-    pixDestroy(&context->references[INVENTORY]);
-    pixDestroy(&context->references[MAP]);
+    pixDestroy(&context->banner_references[PGINFO_KEYBIND_BUTTON]);
+    pixDestroy(&context->banner_references[ESC_LOOTING_BUTTON]);
+    pixDestroy(&context->banner_references[ESC_INVENTORY_BUTTON]);
+    pixDestroy(&context->banner_references[M_MAP_BUTTON]);
 
     obs_remove_main_render_callback(apex_game_filter_offscreen_render, context);
 
-    release_source(context->target_sources[GAME]);
-    release_source(context->target_sources[LOOTING]);
-    release_source(context->target_sources[INVENTORY]);
-    release_source(context->target_sources[MAP]);
+    release_source(context->target_sources[PGINFO_KEYBIND_BUTTON]);
+    release_source(context->target_sources[ESC_LOOTING_BUTTON]);
+    release_source(context->target_sources[ESC_INVENTORY_BUTTON]);
+    release_source(context->target_sources[M_MAP_BUTTON]);
 
     obs_enter_graphics();
 
