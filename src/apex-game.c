@@ -128,7 +128,7 @@ static bool check_banner(apex_game_filter_context_t *filter, area_name_t an, ban
     fill_area(filter->image, filter->video_data, filter->width, filter->height, an);
     float psnr = compare_psnr_value_of_area(filter->image, filter->banner_references[bp], an);
 
-    bool enable_target_source = psnr > 100;
+    bool enable_target_source = psnr > 60;
     obs_source_set_enabled(s, enable_target_source);
 
     obs_source_release(s);
