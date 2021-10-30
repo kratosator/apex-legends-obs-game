@@ -320,8 +320,6 @@ static void apex_game_filter_defaults(obs_data_t *settings)
 {
 }
 
-static void apex_game_filter_filter_remove(void *data, obs_source_t *parent);
-
 static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
 {
     binfo("creating new filter");
@@ -377,7 +375,7 @@ static release_source(obs_weak_source_t *weak_source)
 
 static void apex_game_filter_destroy(void *data)
 {
-    bdebug("destroing filter");
+    binfo("destroing filter");
 
     apex_game_filter_context_t *context = data;
 
