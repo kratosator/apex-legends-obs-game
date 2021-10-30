@@ -17,12 +17,71 @@
 #define bwarn(format, ...) write_log(LOG_WARNING, format, ##__VA_ARGS__)
 #define berr(format, ...) write_log(LOG_ERROR, format, ##__VA_ARGS__)
 
+enum character_name
+{
+    BLOODHOUND,
+    GIBRALTAR,
+    LIFELINE,
+    PATHFINDER,
+    WRAITH,
+    BANGALORE,
+    CAUSTIC,
+    MIRAGE,
+    OCTANE,
+    WATTSON,
+    CRYPTO,
+    REVENANT,
+    LOBA,
+    RAMPART,
+    HORIZON,
+    FUSE,
+    VALKYRIE,
+    SEER,
+
+    CHARACTERS_NUM
+};
+typedef enum character_name character_name_t;
+
+const char *character_name_str[CHARACTERS_NUM] =
+{
+    "bloodhound",
+    "gibraltar",
+    "lifeline",
+    "pathfinder",
+    "wraith",
+    "bangalore",
+    "caustic",
+    "mirage",
+    "octane",
+    "wattson",
+    "crypto",
+    "revenant",
+    "loba",
+    "rampart",
+    "horizon",
+    "fuse",
+    "valkyrie",
+    "seer",
+};
+
+enum banner_position
+{
+    BANNER_GAME,
+    BANNER_LOOTING,
+    BANNER_INVENTORY,
+    BANNER_MAP,
+
+    BANNER_POSITION_NUM
+};
+typedef enum banner_position banner_position_t;
+
 enum area_name
 {
     PGINFO_KEYBIND_BUTTON,
     ESC_LOOTING_BUTTON,
     ESC_INVENTORY_BUTTON,
     M_MAP_BUTTON,
+    PG_BANNER_IMAGE,
 
     AREAS_NUM
 };
@@ -32,6 +91,7 @@ struct apex_game_filter_context
 {
     PIX *image;
     PIX *banner_references[BANNER_POSITION_NUM];
+    PIX *pg_references[CHARACTERS_NUM];
     obs_source_t *source;
     obs_weak_source_t *target_sources[BANNER_POSITION_NUM];
     uint8_t *video_data;
@@ -73,12 +133,18 @@ typedef struct area area_t;
 #define M_MAP_BUTTON_W                  24
 #define M_MAP_BUTTON_H                  24
 
+#define PG_BANNER_IMAGE_X               114
+#define PG_BANNER_IMAGE_Y               977
+#define PG_BANNER_IMAGE_W               20
+#define PG_BANNER_IMAGE_H               20
+
 static const area_t areas[AREAS_NUM] =
 {
     [PGINFO_KEYBIND_BUTTON] =   { PGINFO_KEYBIND_BUTTON_X,      PGINFO_KEYBIND_BUTTON_Y,    PGINFO_KEYBIND_BUTTON_W,    PGINFO_KEYBIND_BUTTON_H     },
     [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X,         ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
     [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X,       ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
     [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
+    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           }
 };
 
 static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned height, area_name_t an)
@@ -198,6 +264,14 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     check_banner(filter, ESC_LOOTING_BUTTON, BANNER_LOOTING);
     check_banner(filter, ESC_INVENTORY_BUTTON, BANNER_INVENTORY);
     check_banner(filter, M_MAP_BUTTON, BANNER_MAP);
+
+    character_name_t pg;
+    fill_area(filter->image, filter->video_data, filter->width, filter->height, PG_BANNER_IMAGE);
+    for (pg = 0; pg < CHARACTERS_NUM; pg++) {
+        float psnr = compare_psnr_value_of_area(filter->image, filter->pg_references[pg], PG_BANNER_IMAGE);
+        if (psnr > 60)
+            break;
+    }
 }
 
 static void update_source(obs_data_t *settings, const char *set_name, obs_weak_source_t **s)
@@ -263,6 +337,25 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
     context->banner_references[ESC_LOOTING_BUTTON] = pixReadMemBmp(ref_looting_bmp, ref_looting_bmp_size);
     context->banner_references[ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
     context->banner_references[M_MAP_BUTTON] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
+
+    context->pg_references[BLOODHOUND] = pixReadMemBmp(game_bloodhound_bmp, game_bloodhound_bmp_size);
+    context->pg_references[GIBRALTAR] = pixReadMemBmp(game_gibraltar_bmp, game_gibraltar_bmp_size);
+    context->pg_references[LIFELINE] = pixReadMemBmp(game_lifeline_bmp, game_lifeline_bmp_size);
+    context->pg_references[PATHFINDER] = pixReadMemBmp(game_pathfinder_bmp, game_pathfinder_bmp_size);
+    context->pg_references[WRAITH] = pixReadMemBmp(game_wraith_bmp, game_wraith_bmp_size);
+    context->pg_references[BANGALORE] = pixReadMemBmp(game_bangalore_bmp, game_bangalore_bmp_size);
+    context->pg_references[CAUSTIC] = pixReadMemBmp(game_caustic_bmp, game_caustic_bmp_size);
+    context->pg_references[MIRAGE] = pixReadMemBmp(game_mirage_bmp, game_mirage_bmp_size);
+    context->pg_references[OCTANE] = pixReadMemBmp(game_octane_bmp, game_octane_bmp_size);
+    context->pg_references[WATTSON] = pixReadMemBmp(game_wattson_bmp, game_wattson_bmp_size);
+    context->pg_references[CRYPTO] = pixReadMemBmp(game_crypto_bmp, game_crypto_bmp_size);
+    context->pg_references[REVENANT] = pixReadMemBmp(game_revenant_bmp, game_revenant_bmp_size);
+    context->pg_references[LOBA] = pixReadMemBmp(game_loba_bmp, game_loba_bmp_size);
+    context->pg_references[RAMPART] = pixReadMemBmp(game_rampart_bmp, game_rampart_bmp_size);
+    context->pg_references[HORIZON] = pixReadMemBmp(game_horizon_bmp, game_horizon_bmp_size);
+    context->pg_references[FUSE] = pixReadMemBmp(game_fuse_bmp, game_fuse_bmp_size);
+    context->pg_references[VALKYRIE] = pixReadMemBmp(game_valkyrie_bmp, game_valkyrie_bmp_size);
+    context->pg_references[SEER] = pixReadMemBmp(game_seer_bmp, game_seer_bmp_size);
 
     apex_game_filter_update(context, settings);
 
