@@ -37,6 +37,7 @@ enum character_name
     FUSE,
     VALKYRIE,
     SEER,
+    ASH,
 
     CHARACTERS_NUM
 };
@@ -62,6 +63,7 @@ const char *character_name_str[CHARACTERS_NUM] =
     "fuse",
     "valkyrie",
     "seer",
+    "ash",
 };
 
 enum banner_position
@@ -354,6 +356,7 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
     context->pg_references[FUSE] = pixReadMemBmp(game_fuse_bmp, game_fuse_bmp_size);
     context->pg_references[VALKYRIE] = pixReadMemBmp(game_valkyrie_bmp, game_valkyrie_bmp_size);
     context->pg_references[SEER] = pixReadMemBmp(game_seer_bmp, game_seer_bmp_size);
+    context->pg_references[ASH] = pixReadMemBmp(game_ash_bmp, game_ash_bmp_size);
 
     apex_game_filter_update(context, settings);
 
