@@ -11,6 +11,8 @@
 
 #define PROJECT_VERSION "1.0.0"
 
+#define DEBUG_FRAME_INTERVAL        300
+
 #define write_log(log_level, format, ...) blog(log_level, "[apex-game] " format, ##__VA_ARGS__)
 
 #define bdebug(format, ...) write_log(LOG_DEBUG, format, ##__VA_ARGS__)
@@ -92,6 +94,15 @@ enum area_name
 };
 typedef enum area_name area_name_t;
 
+const char *area_name_str[] =
+{
+    "PGINFO_KEYBIND_BUTTON",
+    "ESC_LOOTING_BUTTON",
+    "ESC_INVENTORY_BUTTON",
+    "M_MAP_BUTTON",
+    "PG_BANNER_IMAGE",
+};
+
 struct apex_game_filter_context
 {
     PIX *image;
@@ -107,6 +118,8 @@ struct apex_game_filter_context
     gs_texrender_t *texrender;
     gs_stagesurf_t *stagesurface;
     bool closing;
+    bool debug_mode;
+    uint32_t debug_counter;
 };
 typedef struct apex_game_filter_context apex_game_filter_context_t;
 
@@ -152,6 +165,22 @@ static const area_t areas[AREAS_NUM] =
     [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
     [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           }
 };
+
+static void debug_step(apex_game_filter_context_t *filter)
+{
+    filter->debug_counter++;
+}
+
+static bool debug_should_print(apex_game_filter_context_t *filter)
+{
+    if (!filter->debug_mode)
+        return false;
+
+    if ((filter->debug_counter % DEBUG_FRAME_INTERVAL) != 0)
+        return false;
+
+    return true;
+}
 
 static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned height, area_name_t an)
 {
@@ -204,6 +233,9 @@ static bool check_banner(apex_game_filter_context_t *filter, area_name_t an, ban
     obs_source_set_enabled(s, enable_target_source);
 
     obs_source_release(s);
+
+    if (debug_should_print(filter))
+        binfo("%s: %f", area_name_str[an], psnr);
 
     return enable_target_source;
 }
@@ -290,11 +322,17 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     fill_area(filter->image, filter->video_data, filter->width, filter->height, PG_BANNER_IMAGE);
     for (pg = 0; pg < CHARACTERS_NUM; pg++) {
         float psnr = compare_psnr_value_of_area(filter->image, filter->pg_references[pg], PG_BANNER_IMAGE);
+
+        if (debug_should_print(filter))
+            binfo("%s: %f", character_name_str[pg], psnr);
+
         if (psnr > 60)
             break;
     }
 
     update_pgname_text_source(filter, pg);
+
+    debug_step(filter);
 }
 
 static void update_source(obs_data_t *settings, const char *set_name, obs_weak_source_t **s)
@@ -339,6 +377,8 @@ static void apex_game_filter_update(void *data, obs_data_t *settings)
     update_source(settings, "map_source", &filter->target_sources[M_MAP_BUTTON]);
 
     update_source(settings, "pgname_source", &filter->pgname_source);
+
+    filter->debug_mode = obs_data_get_bool(settings, "debug_mode");
 }
 
 static void apex_game_filter_defaults(obs_data_t *settings)
@@ -381,6 +421,9 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
     context->pg_references[SEER] = pixReadMemBmp(game_seer_bmp, game_seer_bmp_size);
     context->pg_references[ASH] = pixReadMemBmp(game_ash_bmp, game_ash_bmp_size);
     context->pg_references[MADMAGGIE] = pixReadMemBmp(game_madmaggie_bmp, game_madmaggie_bmp_size);
+
+    context->debug_mode = false;
+    context->debug_counter = 0;
 
     apex_game_filter_update(context, settings);
 
@@ -495,6 +538,8 @@ static obs_properties_t *apex_game_filter_properties(void *data)
 
     p = obs_properties_add_list(props, "pgname_source", "Current Character Name Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
     obs_enum_sources(list_add_sources, p);
+
+    obs_properties_add_bool(props, "debug_mode", "Enable debug messages");
 
     return props;
 }
