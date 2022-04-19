@@ -103,6 +103,15 @@ const char *area_name_str[] =
     "PG_BANNER_IMAGE",
 };
 
+struct area
+{
+    uint32_t x;
+    uint32_t y;
+    uint32_t w;
+    uint32_t h;
+};
+typedef struct area area_t;
+
 struct apex_game_filter_context
 {
     PIX *image;
@@ -120,29 +129,23 @@ struct apex_game_filter_context
     bool closing;
     bool debug_mode;
     uint32_t debug_counter;
+    const area_t *areas;
 };
 typedef struct apex_game_filter_context apex_game_filter_context_t;
-
-struct area
-{
-    uint32_t x;
-    uint32_t y;
-    uint32_t w;
-    uint32_t h;
-};
-typedef struct area area_t;
 
 #define PGINFO_KEYBIND_BUTTON_X         90
 #define PGINFO_KEYBIND_BUTTON_Y         1034
 #define PGINFO_KEYBIND_BUTTON_W         20
 #define PGINFO_KEYBIND_BUTTON_H         20
 
-#define ESC_LOOTING_BUTTON_X            530
+#define ESC_LOOTING_BUTTON_X_IT         518
+#define ESC_LOOTING_BUTTON_X_EN         530
 #define ESC_LOOTING_BUTTON_Y            971
 #define ESC_LOOTING_BUTTON_W            37
 #define ESC_LOOTING_BUTTON_H            15
 
-#define ESC_INVENTORY_BUTTON_X          67
+#define ESC_INVENTORY_BUTTON_X_IT       86
+#define ESC_INVENTORY_BUTTON_X_EN       67
 #define ESC_INVENTORY_BUTTON_Y          1042
 #define ESC_INVENTORY_BUTTON_W          37
 #define ESC_INVENTORY_BUTTON_H          15
@@ -157,11 +160,20 @@ typedef struct area area_t;
 #define PG_BANNER_IMAGE_W               20
 #define PG_BANNER_IMAGE_H               20
 
-static const area_t areas[AREAS_NUM] =
+static const area_t areas_en[AREAS_NUM] =
 {
     [PGINFO_KEYBIND_BUTTON] =   { PGINFO_KEYBIND_BUTTON_X,      PGINFO_KEYBIND_BUTTON_Y,    PGINFO_KEYBIND_BUTTON_W,    PGINFO_KEYBIND_BUTTON_H     },
-    [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X,         ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
-    [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X,       ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
+    [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X_EN,      ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
+    [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X_EN,    ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
+    [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
+    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           }
+};
+
+static const area_t areas_it[AREAS_NUM] =
+{
+    [PGINFO_KEYBIND_BUTTON] =   { PGINFO_KEYBIND_BUTTON_X,      PGINFO_KEYBIND_BUTTON_Y,    PGINFO_KEYBIND_BUTTON_W,    PGINFO_KEYBIND_BUTTON_H     },
+    [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X_IT,      ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
+    [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X_IT,    ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
     [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
     [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           }
 };
@@ -182,12 +194,10 @@ static bool debug_should_print(apex_game_filter_context_t *filter)
     return true;
 }
 
-static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned height, area_name_t an)
+static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned height, const area_t *a)
 {
     if (pixGetHeight(image) != height || pixGetWidth(image) != width)
         pixSetResolution(image, width, height);
-
-    const area_t *a = &areas[an];
 
     for (unsigned x = a->x; x < (a->x + a->w); x++) {
         for (unsigned y = a->y; y < (a->y + a->w); y++) {
@@ -200,10 +210,8 @@ static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned 
     }
 }
 
-static float compare_psnr_value_of_area(PIX *image, PIX *reference, area_name_t an)
+static float compare_psnr_value_of_area(PIX *image, PIX *reference, const area_t *a)
 {
-    const struct area *a = &areas[an];
-
     BOX *box = boxCreate(a->x, a->y, a->w, a->h);
     PIX *rectangle = pixClipRectangle(image, box, NULL);
 
@@ -226,10 +234,12 @@ static bool check_banner(apex_game_filter_context_t *filter, area_name_t an, ban
     obs_weak_source_t *source = filter->target_sources[an];
     obs_source_t *s = obs_weak_source_get_source(source);
 
-    fill_area(filter->image, filter->video_data, filter->width, filter->height, an);
-    float psnr = compare_psnr_value_of_area(filter->image, filter->banner_references[bp], an);
+    const area_t *a = &(filter->areas[an]);
 
-    bool enable_target_source = psnr > 60;
+    fill_area(filter->image, filter->video_data, filter->width, filter->height, a);
+    float psnr = compare_psnr_value_of_area(filter->image, filter->banner_references[bp], a);
+
+    bool enable_target_source = psnr > 30;
     obs_source_set_enabled(s, enable_target_source);
 
     obs_source_release(s);
@@ -319,9 +329,11 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     check_banner(filter, M_MAP_BUTTON, BANNER_MAP);
 
     character_name_t pg;
-    fill_area(filter->image, filter->video_data, filter->width, filter->height, PG_BANNER_IMAGE);
+
+    fill_area(filter->image, filter->video_data, filter->width, filter->height, &(filter->areas[PG_BANNER_IMAGE]));
+
     for (pg = 0; pg < CHARACTERS_NUM; pg++) {
-        float psnr = compare_psnr_value_of_area(filter->image, filter->pg_references[pg], PG_BANNER_IMAGE);
+        float psnr = compare_psnr_value_of_area(filter->image, filter->pg_references[pg], &(filter->areas[PG_BANNER_IMAGE]));
 
         if (debug_should_print(filter))
             binfo("%s: %f", character_name_str[pg], psnr);
@@ -379,6 +391,15 @@ static void apex_game_filter_update(void *data, obs_data_t *settings)
     update_source(settings, "pgname_source", &filter->pgname_source);
 
     filter->debug_mode = obs_data_get_bool(settings, "debug_mode");
+
+    const char *game_lang = obs_data_get_string(settings, "game_lang");
+
+    if (strcmp(game_lang, "it") == 0)
+        filter->areas = areas_it;
+    else if (strcmp(game_lang, "en") == 0)
+        filter->areas = areas_en;
+    else
+        filter->areas = areas_en;
 }
 
 static void apex_game_filter_defaults(obs_data_t *settings)
@@ -523,6 +544,10 @@ static obs_properties_t *apex_game_filter_properties(void *data)
     obs_property_t *p;
 
     obs_properties_t *props = obs_properties_create();
+
+    p = obs_properties_add_list(props, "game_lang", "Game Language", OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
+    obs_property_list_add_string(p, "Italiano", "it");
+    obs_property_list_add_string(p, "English", "en");
 
     p = obs_properties_add_list(props, "game_source", "Game Overlay Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
     obs_enum_sources(list_add_sources, p);
