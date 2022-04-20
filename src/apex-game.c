@@ -287,6 +287,9 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     if (!gs_texrender_begin(filter->texrender, filter->width, filter->height))
         return;
 
+    if (debug_should_print(filter))
+        binfo("frame: %d", filter->debug_counter);
+
     struct vec4 background;
 
     vec4_zero(&background);
