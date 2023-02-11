@@ -12,6 +12,8 @@
 #define PROJECT_VERSION "1.0.0"
 
 #define DEBUG_FRAME_INTERVAL        300
+#define DEBUG_SAVE_PATH             "C:\\Temp"
+#define DEBUG_SAVE_PATH_NAME_LEN    128
 
 #define PSNR_THRESHOLD_VALUE        20
 
@@ -193,6 +195,17 @@ static void debug_step(apex_game_filter_context_t *filter)
     filter->debug_counter++;
 }
 
+static bool debug_should_save(apex_game_filter_context_t *filter)
+{
+    if (!filter->debug_mode)
+        return false;
+
+    if ((filter->debug_counter % DEBUG_FRAME_INTERVAL) != 0)
+        return false;
+
+    return true;
+}
+
 static bool debug_should_print(apex_game_filter_context_t *filter)
 {
     if (!filter->debug_mode)
@@ -234,6 +247,24 @@ static float compare_psnr_value_of_area(PIX *image, PIX *reference, const area_t
     return psnr;
 }
 
+static void save_image(apex_game_filter_context_t *filter, area_name_t an)
+{
+    char filename[DEBUG_SAVE_PATH_NAME_LEN];
+
+    const area_t *a = &(filter->areas[an]);
+    const char *name = area_name_str[an];
+
+    BOX *box = boxCreate(a->x, a->y, a->w, a->h);
+    PIX *rectangle = pixClipRectangle(filter->image, box, NULL);
+
+    snprintf(filename, DEBUG_SAVE_PATH_NAME_LEN, "%s\\image_%s.png", DEBUG_SAVE_PATH, name);
+
+    pixWrite(filename, rectangle, IFF_PNG);
+
+    boxDestroy(&box);
+    pixDestroy(&rectangle);
+}
+
 static const char *apex_game_filter_get_name(void *unused)
 {
     return "Apex Game";
@@ -259,6 +290,9 @@ static bool get_area_status(apex_game_filter_context_t *filter, area_name_t an)
 
     if (debug_should_print(filter))
         binfo("%s: %f", area_name_str[an], psnr);
+
+    if (debug_should_save(filter))
+        save_image(filter, an);
 
     return match;
 }
