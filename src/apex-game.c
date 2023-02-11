@@ -46,6 +46,9 @@ enum character_name
     SEER,
     ASH,
     MADMAGGIE,
+    NEWCASTLE,
+    VANTAGE,
+    CATALYST,
 
     CHARACTERS_NUM
 };
@@ -73,6 +76,9 @@ const char *character_name_str[CHARACTERS_NUM] =
     "seer",
     "ash",
     "madmaggie",
+    "newcastle",
+    "vantage",
+    "catalyst",
 };
 
 enum banner_position
@@ -515,6 +521,9 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
     context->pg_references[SEER] = pixReadMemBmp(game_seer_bmp, game_seer_bmp_size);
     context->pg_references[ASH] = pixReadMemBmp(game_ash_bmp, game_ash_bmp_size);
     context->pg_references[MADMAGGIE] = pixReadMemBmp(game_madmaggie_bmp, game_madmaggie_bmp_size);
+    context->pg_references[NEWCASTLE] = pixReadMemBmp(game_newcastle_bmp, game_newcastle_bmp_size);
+    context->pg_references[VANTAGE] = pixReadMemBmp(game_vantage_bmp, game_vantage_bmp_size);
+    context->pg_references[CATALYST] = pixReadMemBmp(game_catalyst_bmp, game_catalyst_bmp_size);
 
     context->debug_mode = false;
     context->debug_counter = 0;
