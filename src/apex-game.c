@@ -349,6 +349,9 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     if (!filter->width || !filter->height)
         return;
 
+    if (filter->width != 1920 || filter->height != 1080)
+        return;
+
     gs_texrender_reset(filter->texrender);
 
     if (!gs_texrender_begin(filter->texrender, filter->width, filter->height))
