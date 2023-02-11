@@ -200,7 +200,7 @@ static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned 
         pixSetResolution(image, width, height);
 
     for (unsigned x = a->x; x < (a->x + a->w); x++) {
-        for (unsigned y = a->y; y < (a->y + a->w); y++) {
+        for (unsigned y = a->y; y < (a->y + a->h); y++) {
             uint8_t *rgb = &raw_image[y * width + x];
             uint8_t r = rgb[0];
             uint8_t g = rgb[1];
