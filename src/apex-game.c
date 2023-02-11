@@ -119,7 +119,6 @@ struct apex_game_filter_context
     PIX *pg_references[CHARACTERS_NUM];
     obs_source_t *source;
     obs_weak_source_t *target_sources[BANNER_POSITION_NUM];
-    obs_weak_source_t *pgname_source;
     uint8_t *video_data;
     uint32_t video_linesize;
     uint32_t width;
@@ -250,20 +249,9 @@ static bool check_banner(apex_game_filter_context_t *filter, area_name_t an, ban
     return enable_target_source;
 }
 
-static void update_pgname_text_source(apex_game_filter_context_t *filter, character_name_t cn)
-{
-    obs_source_t *s = obs_weak_source_get_source(filter->pgname_source);
-    obs_data_t *settings = obs_source_get_settings(s);
 
-    if (cn != CHARACTERS_NUM)
-        obs_data_set_string(settings, "text", character_name_str[cn]);
-    else
-        obs_data_set_string(settings, "text", "unknown");
 
-    obs_source_update(s, settings);
 
-    obs_source_release(s);
-}
 
 static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t cy)
 {
@@ -345,7 +333,6 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
             break;
     }
 
-    update_pgname_text_source(filter, pg);
 
     debug_step(filter);
 }
@@ -562,9 +549,6 @@ static obs_properties_t *apex_game_filter_properties(void *data)
     obs_enum_sources(list_add_sources, p);
 
     p = obs_properties_add_list(props, "map_source", "Game Map Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
-    obs_enum_sources(list_add_sources, p);
-
-    p = obs_properties_add_list(props, "pgname_source", "Current Character Name Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
     obs_enum_sources(list_add_sources, p);
 
     obs_properties_add_bool(props, "debug_mode", "Enable debug messages");
