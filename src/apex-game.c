@@ -13,6 +13,8 @@
 
 #define DEBUG_FRAME_INTERVAL        300
 
+#define PSNR_THRESHOLD_VALUE        20
+
 #define write_log(log_level, format, ...) blog(log_level, "[apex-game] " format, ##__VA_ARGS__)
 
 #define bdebug(format, ...) write_log(LOG_DEBUG, format, ##__VA_ARGS__)
@@ -84,7 +86,8 @@ typedef enum banner_position banner_position_t;
 
 enum area_name
 {
-    PGINFO_KEYBIND_BUTTON,
+    MAP_GAME_BUTTON,
+    GRENADE_GAME_BUTTON,
     ESC_LOOTING_BUTTON,
     ESC_INVENTORY_BUTTON,
     M_MAP_BUTTON,
@@ -96,7 +99,8 @@ typedef enum area_name area_name_t;
 
 const char *area_name_str[] =
 {
-    "PGINFO_KEYBIND_BUTTON",
+    "MAP_GAME_BUTTON",
+    "GRENADE_GAME_BUTTON",
     "ESC_LOOTING_BUTTON",
     "ESC_INVENTORY_BUTTON",
     "M_MAP_BUTTON",
@@ -115,7 +119,7 @@ typedef struct area area_t;
 struct apex_game_filter_context
 {
     PIX *image;
-    PIX *banner_references[BANNER_POSITION_NUM];
+    PIX *banner_references[AREAS_NUM];
     PIX *pg_references[CHARACTERS_NUM];
     obs_source_t *source;
     obs_weak_source_t *target_sources[BANNER_POSITION_NUM];
@@ -132,36 +136,42 @@ struct apex_game_filter_context
 };
 typedef struct apex_game_filter_context apex_game_filter_context_t;
 
-#define PGINFO_KEYBIND_BUTTON_X         90
-#define PGINFO_KEYBIND_BUTTON_Y         1034
-#define PGINFO_KEYBIND_BUTTON_W         20
-#define PGINFO_KEYBIND_BUTTON_H         20
+#define MAP_GAME_BUTTON_X               52
+#define MAP_GAME_BUTTON_Y               26
+#define MAP_GAME_BUTTON_W               20
+#define MAP_GAME_BUTTON_H               20
 
-#define ESC_LOOTING_BUTTON_X_IT         518
-#define ESC_LOOTING_BUTTON_X_EN         530
-#define ESC_LOOTING_BUTTON_Y            971
-#define ESC_LOOTING_BUTTON_W            37
-#define ESC_LOOTING_BUTTON_H            15
+#define GRENADE_GAME_BUTTON_X           1417
+#define GRENADE_GAME_BUTTON_Y           1035
+#define GRENADE_GAME_BUTTON_W           20
+#define GRENADE_GAME_BUTTON_H           20
 
-#define ESC_INVENTORY_BUTTON_X_IT       86
-#define ESC_INVENTORY_BUTTON_X_EN       67
-#define ESC_INVENTORY_BUTTON_Y          1042
-#define ESC_INVENTORY_BUTTON_W          37
-#define ESC_INVENTORY_BUTTON_H          15
+#define ESC_LOOTING_BUTTON_X_IT         516
+#define ESC_LOOTING_BUTTON_X_EN         527
+#define ESC_LOOTING_BUTTON_Y            965
+#define ESC_LOOTING_BUTTON_W            43
+#define ESC_LOOTING_BUTTON_H            26
 
-#define M_MAP_BUTTON_X                  62
-#define M_MAP_BUTTON_Y                  1036
-#define M_MAP_BUTTON_W                  24
-#define M_MAP_BUTTON_H                  24
+#define ESC_INVENTORY_BUTTON_X_IT       81
+#define ESC_INVENTORY_BUTTON_X_EN       62
+#define ESC_INVENTORY_BUTTON_Y          1034
+#define ESC_INVENTORY_BUTTON_W          47
+#define ESC_INVENTORY_BUTTON_H          30
 
-#define PG_BANNER_IMAGE_X               114
-#define PG_BANNER_IMAGE_Y               977
-#define PG_BANNER_IMAGE_W               20
-#define PG_BANNER_IMAGE_H               20
+#define M_MAP_BUTTON_X                  63
+#define M_MAP_BUTTON_Y                  1037
+#define M_MAP_BUTTON_W                  22
+#define M_MAP_BUTTON_H                  22
+
+#define PG_BANNER_IMAGE_X               110
+#define PG_BANNER_IMAGE_Y               970
+#define PG_BANNER_IMAGE_W               28
+#define PG_BANNER_IMAGE_H               36
 
 static const area_t areas_en[AREAS_NUM] =
 {
-    [PGINFO_KEYBIND_BUTTON] =   { PGINFO_KEYBIND_BUTTON_X,      PGINFO_KEYBIND_BUTTON_Y,    PGINFO_KEYBIND_BUTTON_W,    PGINFO_KEYBIND_BUTTON_H     },
+    [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_X,            MAP_GAME_BUTTON_Y,          MAP_GAME_BUTTON_W,          MAP_GAME_BUTTON_H           },
+    [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_X,        GRENADE_GAME_BUTTON_Y,      GRENADE_GAME_BUTTON_W,      GRENADE_GAME_BUTTON_H       },
     [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X_EN,      ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
     [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X_EN,    ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
     [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
@@ -170,7 +180,8 @@ static const area_t areas_en[AREAS_NUM] =
 
 static const area_t areas_it[AREAS_NUM] =
 {
-    [PGINFO_KEYBIND_BUTTON] =   { PGINFO_KEYBIND_BUTTON_X,      PGINFO_KEYBIND_BUTTON_Y,    PGINFO_KEYBIND_BUTTON_W,    PGINFO_KEYBIND_BUTTON_H     },
+    [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_X,            MAP_GAME_BUTTON_Y,          MAP_GAME_BUTTON_W,          MAP_GAME_BUTTON_H           },
+    [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_X,        GRENADE_GAME_BUTTON_Y,      GRENADE_GAME_BUTTON_W,      GRENADE_GAME_BUTTON_H       },
     [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X_IT,      ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
     [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X_IT,    ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
     [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
@@ -228,30 +239,58 @@ static const char *apex_game_filter_get_name(void *unused)
     return "Apex Game";
 }
 
-static bool check_banner(apex_game_filter_context_t *filter, area_name_t an, banner_position_t bp)
+static void set_source_status(obs_weak_source_t *source, bool status)
 {
-    obs_weak_source_t *source = filter->target_sources[an];
     obs_source_t *s = obs_weak_source_get_source(source);
 
+    obs_source_set_enabled(s, status);
+
+    obs_source_release(s);
+}
+
+static bool get_area_status(apex_game_filter_context_t *filter, area_name_t an)
+{
     const area_t *a = &(filter->areas[an]);
 
     fill_area(filter->image, filter->video_data, filter->width, filter->height, a);
-    float psnr = compare_psnr_value_of_area(filter->image, filter->banner_references[bp], a);
+    float psnr = compare_psnr_value_of_area(filter->image, filter->banner_references[an], a);
 
-    bool enable_target_source = psnr > 30;
-    obs_source_set_enabled(s, enable_target_source);
-
-    obs_source_release(s);
+    bool match = psnr > PSNR_THRESHOLD_VALUE;
 
     if (debug_should_print(filter))
         binfo("%s: %f", area_name_str[an], psnr);
 
-    return enable_target_source;
+    return match;
 }
 
+static void check_banner(apex_game_filter_context_t *filter, area_name_t an, banner_position_t bp)
+{
+    bool enable_target_source = get_area_status(filter, an);
 
+    set_source_status(filter->target_sources[bp], enable_target_source);
+}
 
+static character_name_t get_pg_showed(apex_game_filter_context_t *filter)
+{
+    character_name_t pg;
 
+    fill_area(filter->image, filter->video_data, filter->width, filter->height, &(filter->areas[PG_BANNER_IMAGE]));
+
+    if (debug_should_save(filter))
+        save_image(filter, PG_BANNER_IMAGE);
+
+    for (pg = 0; pg < CHARACTERS_NUM; pg++) {
+        float psnr = compare_psnr_value_of_area(filter->image, filter->pg_references[pg], &(filter->areas[PG_BANNER_IMAGE]));
+
+        if (debug_should_print(filter))
+            binfo("%s: %f", character_name_str[pg], psnr);
+
+        if (psnr > PSNR_THRESHOLD_VALUE)
+            break;
+    }
+
+    return pg;
+}
 
 static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t cy)
 {
@@ -314,25 +353,36 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     if (!gs_stagesurface_map(filter->stagesurface, &filter->video_data, &filter->video_linesize))
         return;
 
-    check_banner(filter, PGINFO_KEYBIND_BUTTON, BANNER_GAME);
+    /*
+     * if the area of interest machets the reference image we are 100% sure that we can
+     * move to that scene
+     */
     check_banner(filter, ESC_LOOTING_BUTTON, BANNER_LOOTING);
     check_banner(filter, ESC_INVENTORY_BUTTON, BANNER_INVENTORY);
     check_banner(filter, M_MAP_BUTTON, BANNER_MAP);
 
-    character_name_t pg;
+    /*
+     * in game matching is a little bit more difficult since when pg info button was removed
+     * first we try to identify the pg in the bottom left part of the screen, this should cover the
+     * majority of occurreciens.
+     * in some situations the pg is not recognizable (ie. when player receives damage the pg image
+     * pulses with a red color making recognition unreliable), therefore we use the M button top
+     * left or the G under grenades slot.
+     */
+    bool enable_banner_game = false;
 
-    fill_area(filter->image, filter->video_data, filter->width, filter->height, &(filter->areas[PG_BANNER_IMAGE]));
+    character_name_t pg = get_pg_showed(filter);
 
-    for (pg = 0; pg < CHARACTERS_NUM; pg++) {
-        float psnr = compare_psnr_value_of_area(filter->image, filter->pg_references[pg], &(filter->areas[PG_BANNER_IMAGE]));
+    if (pg != CHARACTERS_NUM) {
+        enable_banner_game = true;
+    } else {
+        bool map_game = get_area_status(filter, MAP_GAME_BUTTON);
+        bool grenade_game = get_area_status(filter, GRENADE_GAME_BUTTON);
 
-        if (debug_should_print(filter))
-            binfo("%s: %f", character_name_str[pg], psnr);
-
-        if (psnr > 60)
-            break;
+        enable_banner_game = map_game || grenade_game;
     }
 
+    set_source_status(filter->target_sources[BANNER_GAME], enable_banner_game);
 
     debug_step(filter);
 }
@@ -373,12 +423,10 @@ static void apex_game_filter_update(void *data, obs_data_t *settings)
 
     binfo("update");
 
-    update_source(settings, "game_source", &filter->target_sources[PGINFO_KEYBIND_BUTTON]);
-    update_source(settings, "looting_source", &filter->target_sources[ESC_LOOTING_BUTTON]);
-    update_source(settings, "inventory_source", &filter->target_sources[ESC_INVENTORY_BUTTON]);
-    update_source(settings, "map_source", &filter->target_sources[M_MAP_BUTTON]);
-
-    update_source(settings, "pgname_source", &filter->pgname_source);
+    update_source(settings, "game_source", &filter->target_sources[BANNER_GAME]);
+    update_source(settings, "looting_source", &filter->target_sources[BANNER_LOOTING]);
+    update_source(settings, "inventory_source", &filter->target_sources[BANNER_INVENTORY]);
+    update_source(settings, "map_source", &filter->target_sources[BANNER_MAP]);
 
     filter->debug_mode = obs_data_get_bool(settings, "debug_mode");
 
@@ -407,7 +455,8 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
 
     context->image = pixCreate(1920, 1080, 32);
 
-    context->banner_references[PGINFO_KEYBIND_BUTTON] = pixReadMemBmp(ref_game_bmp, ref_game_bmp_size);
+    context->banner_references[MAP_GAME_BUTTON] = pixReadMemBmp(ref_game_map_bmp, ref_game_map_bmp_size);
+    context->banner_references[GRENADE_GAME_BUTTON] = pixReadMemBmp(ref_game_grenade_bmp, ref_game_grenade_bmp_size);
     context->banner_references[ESC_LOOTING_BUTTON] = pixReadMemBmp(ref_looting_bmp, ref_looting_bmp_size);
     context->banner_references[ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
     context->banner_references[M_MAP_BUTTON] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
@@ -464,17 +513,18 @@ static void apex_game_filter_destroy(void *data)
 
     pixDestroy(&context->image);
 
-    pixDestroy(&context->banner_references[PGINFO_KEYBIND_BUTTON]);
+    pixDestroy(&context->banner_references[MAP_GAME_BUTTON]);
+    pixDestroy(&context->banner_references[GRENADE_GAME_BUTTON]);
     pixDestroy(&context->banner_references[ESC_LOOTING_BUTTON]);
     pixDestroy(&context->banner_references[ESC_INVENTORY_BUTTON]);
     pixDestroy(&context->banner_references[M_MAP_BUTTON]);
 
     obs_remove_main_render_callback(apex_game_filter_offscreen_render, context);
 
-    release_source(context->target_sources[PGINFO_KEYBIND_BUTTON]);
-    release_source(context->target_sources[ESC_LOOTING_BUTTON]);
-    release_source(context->target_sources[ESC_INVENTORY_BUTTON]);
-    release_source(context->target_sources[M_MAP_BUTTON]);
+    release_source(context->target_sources[BANNER_GAME]);
+    release_source(context->target_sources[BANNER_LOOTING]);
+    release_source(context->target_sources[BANNER_INVENTORY]);
+    release_source(context->target_sources[BANNER_MAP]);
 
     obs_enter_graphics();
 
