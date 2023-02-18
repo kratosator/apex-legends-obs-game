@@ -98,6 +98,7 @@ enum area_name
     GRENADE_GAME_BUTTON,
     ESC_LOOTING_BUTTON,
     ESC_INVENTORY_BUTTON,
+    GRAYBAR_INVENTORY_BUTTON,
     M_MAP_BUTTON,
     PG_BANNER_IMAGE,
 
@@ -111,6 +112,7 @@ const char *area_name_str[] =
     "GRENADE_GAME_BUTTON",
     "ESC_LOOTING_BUTTON",
     "ESC_INVENTORY_BUTTON",
+    "GRAYBAR_INVENTORY_BUTTON",
     "M_MAP_BUTTON",
     "PG_BANNER_IMAGE",
 };
@@ -166,6 +168,12 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define ESC_INVENTORY_BUTTON_W          47
 #define ESC_INVENTORY_BUTTON_H          30
 
+#define GRAYBAR_INVENTORY_BUTTON_X_IT   149
+#define GRAYBAR_INVENTORY_BUTTON_X_EN   149
+#define GRAYBAR_INVENTORY_BUTTON_Y      839
+#define GRAYBAR_INVENTORY_BUTTON_W      200
+#define GRAYBAR_INVENTORY_BUTTON_H      1
+
 #define M_MAP_BUTTON_X                  63
 #define M_MAP_BUTTON_Y                  1037
 #define M_MAP_BUTTON_W                  22
@@ -182,6 +190,7 @@ static const area_t areas_en[AREAS_NUM] =
     [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_X,        GRENADE_GAME_BUTTON_Y,      GRENADE_GAME_BUTTON_W,      GRENADE_GAME_BUTTON_H       },
     [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X_EN,      ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
     [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X_EN,    ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
+    [GRAYBAR_INVENTORY_BUTTON] ={ GRAYBAR_INVENTORY_BUTTON_X_EN,GRAYBAR_INVENTORY_BUTTON_Y, GRAYBAR_INVENTORY_BUTTON_W, GRAYBAR_INVENTORY_BUTTON_H  },
     [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
     [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           }
 };
@@ -192,6 +201,7 @@ static const area_t areas_it[AREAS_NUM] =
     [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_X,        GRENADE_GAME_BUTTON_Y,      GRENADE_GAME_BUTTON_W,      GRENADE_GAME_BUTTON_H       },
     [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X_IT,      ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
     [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X_IT,    ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
+    [GRAYBAR_INVENTORY_BUTTON] ={ GRAYBAR_INVENTORY_BUTTON_X_IT,GRAYBAR_INVENTORY_BUTTON_Y, GRAYBAR_INVENTORY_BUTTON_W, GRAYBAR_INVENTORY_BUTTON_H  },
     [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
     [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           }
 };
@@ -401,8 +411,20 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
      * move to that scene
      */
     check_banner(filter, ESC_LOOTING_BUTTON, BANNER_LOOTING);
-    check_banner(filter, ESC_INVENTORY_BUTTON, BANNER_INVENTORY);
     check_banner(filter, M_MAP_BUTTON, BANNER_MAP);
+
+    /*
+     * if inventory ESC button is found a further check must performed if inventory tab
+     * is selected, otherwise in the other tabs player banner is not showed
+     */
+    if (get_area_status(filter, ESC_INVENTORY_BUTTON)) {
+        if (get_area_status(filter, GRAYBAR_INVENTORY_BUTTON))
+            set_source_status(filter->target_sources[BANNER_INVENTORY], true);
+        else
+            set_source_status(filter->target_sources[BANNER_INVENTORY], false);
+    } else {
+        set_source_status(filter->target_sources[BANNER_INVENTORY], false);
+    }
 
     /*
      * in game matching is a little bit more difficult since when pg info button was removed
@@ -502,6 +524,7 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
     context->banner_references[GRENADE_GAME_BUTTON] = pixReadMemBmp(ref_game_grenade_bmp, ref_game_grenade_bmp_size);
     context->banner_references[ESC_LOOTING_BUTTON] = pixReadMemBmp(ref_looting_bmp, ref_looting_bmp_size);
     context->banner_references[ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
+    context->banner_references[GRAYBAR_INVENTORY_BUTTON] = pixReadMemBmp(ref_graybar_inventory_bmp, ref_graybar_inventory_bmp_size);
     context->banner_references[M_MAP_BUTTON] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
 
     context->pg_references[BLOODHOUND] = pixReadMemBmp(game_bloodhound_bmp, game_bloodhound_bmp_size);
