@@ -29,7 +29,7 @@ In order to work properly it is required have the following settings:
 
 ## Installation
 
-Compile the plugin or download the latest release available. Place the apex-game.dll in the plugins directory of your OBS installation (`%OBS_INSTALL_FOLDER%\obs-plugins\apex-game.dll`), open OBS and you're ready to go!
+Compile the plugin or download the latest release available. Place the apex-game.dll in the plugins directory of your OBS installation (`%OBS_INSTALL_FOLDER%\obs-plugins\64bit\apex-game.dll`), open OBS and you're ready to go!
 
 ## Configuration
 
