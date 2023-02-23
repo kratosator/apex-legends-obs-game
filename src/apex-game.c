@@ -262,6 +262,17 @@ static float compare_psnr_value_of_area(PIX *image, PIX *reference, const area_t
     return psnr;
 }
 
+static void save_ref_image(apex_game_filter_context_t *filter, area_name_t an)
+{
+    char filename[DEBUG_SAVE_PATH_NAME_LEN];
+
+    const char *name = area_name_str[an];
+
+    snprintf(filename, DEBUG_SAVE_PATH_NAME_LEN, "%s\\ref_%s.png", DEBUG_SAVE_PATH, name);
+
+    pixWrite(filename, filter->banner_references[an], IFF_PNG);
+}
+
 static void save_image(apex_game_filter_context_t *filter, area_name_t an)
 {
     char filename[DEBUG_SAVE_PATH_NAME_LEN];
@@ -306,8 +317,10 @@ static bool get_area_status(apex_game_filter_context_t *filter, area_name_t an)
     if (debug_should_print(filter))
         binfo("%s: %f", area_name_str[an], psnr);
 
-    if (debug_should_save(filter))
+    if (debug_should_save(filter)) {
         save_image(filter, an);
+        save_ref_image(filter, an);
+    }
 
     return match;
 }
@@ -325,8 +338,10 @@ static character_name_t get_pg_showed(apex_game_filter_context_t *filter)
 
     fill_area(filter->image, filter->video_data, filter->width, filter->height, &(filter->areas[PG_BANNER_IMAGE]));
 
-    if (debug_should_save(filter))
+    if (debug_should_save(filter)) {
         save_image(filter, PG_BANNER_IMAGE);
+        save_ref_image(filter, PG_BANNER_IMAGE);
+    }
 
     for (pg = 0; pg < CHARACTERS_NUM; pg++) {
         float psnr = compare_psnr_value_of_area(filter->image, filter->pg_references[pg], &(filter->areas[PG_BANNER_IMAGE]));
