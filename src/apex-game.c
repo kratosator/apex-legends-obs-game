@@ -603,6 +603,9 @@ static void apex_game_filter_destroy(void *data)
     pixDestroy(&context->banner_references[GRAYBAR_INVENTORY_BUTTON]);
     pixDestroy(&context->banner_references[M_MAP_BUTTON]);
 
+    for (character_name_t pg = 0; pg < CHARACTERS_NUM; pg++)
+        pixDestroy(&context->pg_references[pg]);
+
     obs_remove_main_render_callback(apex_game_filter_offscreen_render, context);
 
     release_source(context->target_sources[BANNER_GAME]);
