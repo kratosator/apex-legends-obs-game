@@ -585,6 +585,7 @@ static void apex_game_filter_destroy(void *data)
     pixDestroy(&context->banner_references[GRENADE_GAME_BUTTON]);
     pixDestroy(&context->banner_references[ESC_LOOTING_BUTTON]);
     pixDestroy(&context->banner_references[ESC_INVENTORY_BUTTON]);
+    pixDestroy(&context->banner_references[GRAYBAR_INVENTORY_BUTTON]);
     pixDestroy(&context->banner_references[M_MAP_BUTTON]);
 
     obs_remove_main_render_callback(apex_game_filter_offscreen_render, context);
