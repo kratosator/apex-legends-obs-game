@@ -2,10 +2,10 @@
 
 ## Features
 
- - Automatic recognition of in-game character in all HUDs (in-game, inventory, looting, map view)
+ - Automatic recognition of in-game character  in all HUDs (in-game, inventory, looting, map view)
  - Possibility to disable/enable sources depending on which HUD is currently displayed
  - Frame accurate character recognition and source activation/deactivation
- - Works with game language set to English or Italiano (with others languages this plugin may not work, but support can be added on request)
+ - Works with game language set to English/Italiano and resolution set to FullHD
 
 ## Description
 
@@ -13,11 +13,12 @@ OBS plugin that allows stream customization targeted specifically to Apex Legend
 
 It allows, for example, to apply a character card overlay in the correct screen position depending on the HUD showed by the game. There are 4 HUDs where the player card is recognized: in-game, inventory, looting box, map view.
 
-The plugin works recognizing elements of the HUD of the game to determine the current HUD showed. Currently it works only if these requirements are met
+The plugin works recognizing elements of the HUD of the game to determine the current HUD showed. It works when using mouse and keyboard or a PS4 controller, other input devices may create problems. Currently it works only if these requirements are met
 
- - game is running on PC using mouse and keyboard
  - game's language set to either English or Italiano
  - screen's resolution set to 1920x1080
+
+Other languages or resolutions may be supported on request.
 
 In order to work properly it is required have the following settings:
 
@@ -29,13 +30,13 @@ In order to work properly it is required have the following settings:
 
 ## Installation
 
-Compile the plugin or download the latest release available. Place the apex-game.dll in the plugins directory of your OBS installation (`%OBS_INSTALL_FOLDER%\obs-plugins\64bit\apex-game.dll`), open OBS and you're ready to go!
+Compile the plugin or download the latest release available. Place `apex-game.dll` file in the plugins directory of your OBS installation (`%OBS_INSTALL_FOLDER%\obs-plugins\64bit\apex-game.dll`), open OBS and you're ready to go!
 
 ## Configuration
 
-Configuration is pretty straight forward, apply the filter "Apex Game" on the source/scene that contains Apex Legends gameplay. Configure sources in the menu, each source will be activated only when the corresponding HUD condition is showed in the game.
+Configuration is pretty straight forward, apply the filter "Apex Game" on the source/scene that contains Apex Legends gameplay. Configure your input device and game's language and set sources in the menu, each source will be activated only when the corresponding HUD condition is showed in the game.
 
-[![Configuration example](https://i.imgur.com/iYMGh8c.png)](https://i.imgur.com/iYMGh8c.png)
+[![Configuration example](https://i.imgur.com/eMTp2e3.png)](https://i.imgur.com/eMTp2e3.png)
 
 ## Screenshots
 
