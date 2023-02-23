@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(apex-game VERSION 1.1.0)
+project(apex-game VERSION 1.2.0)
 
 include(CreateResources.cmake)
 
