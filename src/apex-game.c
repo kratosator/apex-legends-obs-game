@@ -232,12 +232,12 @@ static bool debug_should_print(apex_game_filter_context_t *filter)
     return true;
 }
 
-static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned height, const area_t *a)
+static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned height, const area_t *a, int xoff)
 {
     if (pixGetHeight(image) != height || pixGetWidth(image) != width)
         pixSetResolution(image, width, height);
 
-    for (unsigned x = a->x; x < (a->x + a->w); x++) {
+    for (unsigned x = a->x + xoff; x < (a->x + xoff + a->w); x++) {
         for (unsigned y = a->y; y < (a->y + a->h); y++) {
             uint8_t *rgb = &raw_image[y * width + x];
             uint8_t r = rgb[0];
@@ -248,9 +248,9 @@ static void fill_area(PIX *image, uint32_t *raw_image, unsigned width, unsigned 
     }
 }
 
-static float compare_psnr_value_of_area(PIX *image, PIX *reference, const area_t *a)
+static float compare_psnr_value_of_area_with_offset(PIX *image, PIX *reference, const area_t *a, int xoff)
 {
-    BOX *box = boxCreate(a->x, a->y, a->w, a->h);
+    BOX *box = boxCreate(a->x + xoff, a->y, a->w, a->h);
     PIX *rectangle = pixClipRectangle(image, box, NULL);
 
     float psnr;
@@ -260,6 +260,11 @@ static float compare_psnr_value_of_area(PIX *image, PIX *reference, const area_t
     pixDestroy(&rectangle);
 
     return psnr;
+}
+
+static float compare_psnr_value_of_area(PIX *image, PIX *reference, const area_t *a)
+{
+    return compare_psnr_value_of_area_with_offset(image, reference, a, 0);
 }
 
 static void save_ref_image(apex_game_filter_context_t *filter, area_name_t an)
@@ -305,12 +310,12 @@ static void set_source_status(obs_weak_source_t *source, bool status)
     obs_source_release(s);
 }
 
-static bool get_area_status(apex_game_filter_context_t *filter, area_name_t an)
+static bool get_area_status_withoffset(apex_game_filter_context_t *filter, area_name_t an, int xoff)
 {
     const area_t *a = &(filter->areas[an]);
 
-    fill_area(filter->image, filter->video_data, filter->width, filter->height, a);
-    float psnr = compare_psnr_value_of_area(filter->image, filter->banner_references[an], a);
+    fill_area(filter->image, filter->video_data, filter->width, filter->height, a, xoff);
+    float psnr = compare_psnr_value_of_area_with_offset(filter->image, filter->banner_references[an], a, xoff);
 
     bool match = psnr > PSNR_THRESHOLD_VALUE;
 
@@ -325,6 +330,11 @@ static bool get_area_status(apex_game_filter_context_t *filter, area_name_t an)
     return match;
 }
 
+static bool get_area_status(apex_game_filter_context_t *filter, area_name_t an)
+{
+    return get_area_status_withoffset(filter, an, 0);
+}
+
 static void check_banner(apex_game_filter_context_t *filter, area_name_t an, banner_position_t bp)
 {
     bool enable_target_source = get_area_status(filter, an);
@@ -336,7 +346,7 @@ static character_name_t get_pg_showed(apex_game_filter_context_t *filter)
 {
     character_name_t pg;
 
-    fill_area(filter->image, filter->video_data, filter->width, filter->height, &(filter->areas[PG_BANNER_IMAGE]));
+    fill_area(filter->image, filter->video_data, filter->width, filter->height, &(filter->areas[PG_BANNER_IMAGE]), 0);
 
     if (debug_should_save(filter)) {
         save_image(filter, PG_BANNER_IMAGE);
