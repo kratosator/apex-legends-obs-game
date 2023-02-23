@@ -101,6 +101,10 @@ enum area_name
     GRAYBAR_INVENTORY_BUTTON,
     M_MAP_BUTTON,
     PG_BANNER_IMAGE,
+    PAD_MAP_BUTTON,
+    PAD_LOOTING_BUTTON,
+    PAD_INVENTORY_BUTTON,
+    PAD_TACTICAL_BUTTON,
 
     AREAS_NUM
 };
@@ -115,6 +119,18 @@ const char *area_name_str[] =
     "GRAYBAR_INVENTORY_BUTTON",
     "M_MAP_BUTTON",
     "PG_BANNER_IMAGE",
+    "PAD_MAP_BUTTON",
+    "PAD_LOOTING_BUTTON",
+    "PAD_INVENTORY_BUTTON",
+    "PAD_TACTICAL_BUTTON"
+};
+
+enum input_device
+{
+    MOUSE_AND_KEYBOARD,
+    PLAY_STATION_PAD,
+
+    INPUT_DEVICES_NUM
 };
 
 struct area
@@ -137,6 +153,7 @@ struct apex_game_filter_context
     uint32_t video_linesize;
     uint32_t width;
     uint32_t height;
+    enum input_device input;
     gs_texrender_t *texrender;
     gs_stagesurf_t *stagesurface;
     bool closing;
@@ -183,6 +200,29 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define PG_BANNER_IMAGE_W               28
 #define PG_BANNER_IMAGE_H               36
 
+#define PAD_MAP_BUTTON_X                55
+#define PAD_MAP_BUTTON_Y                1030
+#define PAD_MAP_BUTTON_W                52
+#define PAD_MAP_BUTTON_H                35
+
+#define PAD_LOOTING_BUTTON_X_IT         525
+#define PAD_LOOTING_BUTTON_X_EN         536
+#define PAD_LOOTING_BUTTON_Y            968
+#define PAD_LOOTING_BUTTON_W            24
+#define PAD_LOOTING_BUTTON_H            20
+
+#define PAD_INVENTORY_BUTTON_X_IT       92
+#define PAD_INVENTORY_BUTTON_X_EN       73
+#define PAD_INVENTORY_BUTTON_Y          1039
+#define PAD_INVENTORY_BUTTON_W          24
+#define PAD_INVENTORY_BUTTON_H          20
+
+#define PAD_TACTICAL_BUTTON_X_IT        604
+#define PAD_TACTICAL_BUTTON_X_EN        604
+#define PAD_TACTICAL_BUTTON_Y           1040
+#define PAD_TACTICAL_BUTTON_W           22
+#define PAD_TACTICAL_BUTTON_H           12
+
 static const area_t areas_en[AREAS_NUM] =
 {
     [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_X,            MAP_GAME_BUTTON_Y,          MAP_GAME_BUTTON_W,          MAP_GAME_BUTTON_H           },
@@ -191,7 +231,11 @@ static const area_t areas_en[AREAS_NUM] =
     [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X_EN,    ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
     [GRAYBAR_INVENTORY_BUTTON] ={ GRAYBAR_INVENTORY_BUTTON_X,   GRAYBAR_INVENTORY_BUTTON_Y, GRAYBAR_INVENTORY_BUTTON_W, GRAYBAR_INVENTORY_BUTTON_H  },
     [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
-    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           }
+    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           },
+    [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_X,             PAD_MAP_BUTTON_Y,           PAD_MAP_BUTTON_W,           PAD_MAP_BUTTON_H            },
+    [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_EN,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
+    [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_EN,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X_IT,     PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
 };
 
 static const area_t areas_it[AREAS_NUM] =
@@ -202,7 +246,11 @@ static const area_t areas_it[AREAS_NUM] =
     [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X_IT,    ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
     [GRAYBAR_INVENTORY_BUTTON] ={ GRAYBAR_INVENTORY_BUTTON_X,   GRAYBAR_INVENTORY_BUTTON_Y, GRAYBAR_INVENTORY_BUTTON_W, GRAYBAR_INVENTORY_BUTTON_H  },
     [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
-    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           }
+    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           },
+    [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_X,             PAD_MAP_BUTTON_Y,           PAD_MAP_BUTTON_W,           PAD_MAP_BUTTON_H            },
+    [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_IT,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
+    [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_IT,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X_IT,     PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
 };
 
 static void debug_step(apex_game_filter_context_t *filter)
@@ -366,6 +414,105 @@ static character_name_t get_pg_showed(apex_game_filter_context_t *filter)
     return pg;
 }
 
+static void match_mk(apex_game_filter_context_t *filter)
+{
+    /*
+     * if the area of interest matches the reference image we are
+     * 100% sure that we can move to that scene
+     */
+    check_banner(filter, ESC_LOOTING_BUTTON, BANNER_LOOTING);
+    check_banner(filter, M_MAP_BUTTON, BANNER_MAP);
+
+    /*
+     * if inventory ESC button is found a further check must performed if inventory tab
+     * is selected, otherwise in the other tabs player banner is not showed
+     */
+    if (get_area_status(filter, ESC_INVENTORY_BUTTON)) {
+        if (get_area_status(filter, GRAYBAR_INVENTORY_BUTTON))
+            set_source_status(filter->target_sources[BANNER_INVENTORY], true);
+        else
+            set_source_status(filter->target_sources[BANNER_INVENTORY], false);
+    } else {
+        set_source_status(filter->target_sources[BANNER_INVENTORY], false);
+    }
+
+    /*
+     * in game matching is a little bit more difficult since when pg info button was removed
+     * first we try to identify the pg in the bottom left part of the screen, this should cover the
+     * majority of occurreciens.
+     * in some situations the pg is not recognizable (ie. when player receives damage the pg image
+     * pulses with a red color making recognition unreliable), therefore we use the M button top
+     * left or the G under grenades slot.
+     */
+    bool enable_banner_game = false;
+
+    character_name_t pg = get_pg_showed(filter);
+
+    if (pg != CHARACTERS_NUM) {
+        enable_banner_game = true;
+    } else {
+        bool map_game = get_area_status(filter, MAP_GAME_BUTTON);
+        bool grenade_game = get_area_status(filter, GRENADE_GAME_BUTTON);
+
+        enable_banner_game = map_game || grenade_game;
+    }
+
+    set_source_status(filter->target_sources[BANNER_GAME], enable_banner_game);
+}
+
+static void match_ps4pad(apex_game_filter_context_t *filter)
+{
+    /*
+     * if the area of interest matches the reference image we are
+     * 100% sure that we can move to that scene
+     */
+    check_banner(filter, PAD_MAP_BUTTON, BANNER_MAP);
+
+    /*
+     * there's a funny behaviour if you use m&k and pad at the same time,
+     * the absolute position of the button moves by 8 pixels wheter or not
+     * you move mouse, handle this case by trying to recognize the reference
+     * image twice considering that offset
+     */
+    bool pad_looting = get_area_status(filter, PAD_LOOTING_BUTTON);
+    bool pad_looting_offset = get_area_status_withoffset(filter, PAD_LOOTING_BUTTON, 8);
+    bool activate_looting = pad_looting || pad_looting_offset;
+
+    set_source_status(filter->target_sources[BANNER_LOOTING], activate_looting);
+
+    /*
+     * inventory for pad is difficult, the absolute position of the pg HUD moves when
+     * analog joystick is moved making recognition of this HUD not perfect
+     * as for now recognize only the inventory button, a much complex analysis is
+     * necessary to move the source in the correct position
+     */
+    bool pad_inventory = get_area_status(filter, PAD_INVENTORY_BUTTON);
+    bool pad_inventory_offset = get_area_status_withoffset(filter, PAD_INVENTORY_BUTTON, -8);
+    bool activate_inventory = pad_inventory || pad_inventory_offset;
+
+    set_source_status(filter->target_sources[BANNER_INVENTORY], activate_inventory);
+
+    /*
+     * in game matching is a little bit more difficult since when pg info button was removed
+     * first we try to identify the pg in the bottom left part of the screen, this should cover the
+     * majority of occurreciens.
+     * in some situations the pg is not recognizable (ie. when player receives damage the pg image
+     * pulses with a red color making recognition unreliable), therefore we use the L1 button
+     * of the tactical ability
+     */
+    bool enable_banner_game = false;
+
+    character_name_t pg = get_pg_showed(filter);
+
+    if (pg != CHARACTERS_NUM) {
+        enable_banner_game = true;
+    } else {
+        enable_banner_game = get_area_status(filter, PAD_TACTICAL_BUTTON);
+    }
+
+    set_source_status(filter->target_sources[BANNER_GAME], enable_banner_game);
+}
+
 static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t cy)
 {
     apex_game_filter_context_t *filter = data;
@@ -430,48 +577,10 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     if (!gs_stagesurface_map(filter->stagesurface, &filter->video_data, &filter->video_linesize))
         return;
 
-    /*
-     * if the area of interest machets the reference image we are 100% sure that we can
-     * move to that scene
-     */
-    check_banner(filter, ESC_LOOTING_BUTTON, BANNER_LOOTING);
-    check_banner(filter, M_MAP_BUTTON, BANNER_MAP);
-
-    /*
-     * if inventory ESC button is found a further check must performed if inventory tab
-     * is selected, otherwise in the other tabs player banner is not showed
-     */
-    if (get_area_status(filter, ESC_INVENTORY_BUTTON)) {
-        if (get_area_status(filter, GRAYBAR_INVENTORY_BUTTON))
-            set_source_status(filter->target_sources[BANNER_INVENTORY], true);
-        else
-            set_source_status(filter->target_sources[BANNER_INVENTORY], false);
-    } else {
-        set_source_status(filter->target_sources[BANNER_INVENTORY], false);
-    }
-
-    /*
-     * in game matching is a little bit more difficult since when pg info button was removed
-     * first we try to identify the pg in the bottom left part of the screen, this should cover the
-     * majority of occurreciens.
-     * in some situations the pg is not recognizable (ie. when player receives damage the pg image
-     * pulses with a red color making recognition unreliable), therefore we use the M button top
-     * left or the G under grenades slot.
-     */
-    bool enable_banner_game = false;
-
-    character_name_t pg = get_pg_showed(filter);
-
-    if (pg != CHARACTERS_NUM) {
-        enable_banner_game = true;
-    } else {
-        bool map_game = get_area_status(filter, MAP_GAME_BUTTON);
-        bool grenade_game = get_area_status(filter, GRENADE_GAME_BUTTON);
-
-        enable_banner_game = map_game || grenade_game;
-    }
-
-    set_source_status(filter->target_sources[BANNER_GAME], enable_banner_game);
+    if (filter->input == MOUSE_AND_KEYBOARD)
+        match_mk(filter);
+    else if (filter->input == PLAY_STATION_PAD)
+        match_ps4pad(filter);
 
     debug_step(filter);
 }
@@ -527,6 +636,15 @@ static void apex_game_filter_update(void *data, obs_data_t *settings)
         filter->areas = areas_en;
     else
         filter->areas = areas_en;
+
+    const char *game_input = obs_data_get_string(settings, "game_input");
+
+    if (strcmp(game_input, "mk") == 0)
+        filter->input = MOUSE_AND_KEYBOARD;
+    else if (strcmp(game_input, "ps-pad") == 0)
+        filter->input = PLAY_STATION_PAD;
+    else
+        filter->input = MOUSE_AND_KEYBOARD;
 }
 
 static void apex_game_filter_defaults(obs_data_t *settings)
@@ -550,6 +668,10 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
     context->banner_references[ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
     context->banner_references[GRAYBAR_INVENTORY_BUTTON] = pixReadMemBmp(ref_graybar_inventory_bmp, ref_graybar_inventory_bmp_size);
     context->banner_references[M_MAP_BUTTON] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
+    context->banner_references[PAD_MAP_BUTTON] = pixReadMemBmp(ref_pad_map_bmp, ref_pad_map_bmp_size);
+    context->banner_references[PAD_LOOTING_BUTTON] = pixReadMemBmp(ref_pad_looting_bmp, ref_pad_looting_bmp_size);
+    context->banner_references[PAD_INVENTORY_BUTTON] = pixReadMemBmp(ref_pad_inventory_bmp, ref_pad_inventory_bmp_size);
+    context->banner_references[PAD_TACTICAL_BUTTON] = pixReadMemBmp(ref_pad_tactical_bmp, ref_pad_tactical_bmp_size);
 
     context->pg_references[BLOODHOUND] = pixReadMemBmp(game_bloodhound_bmp, game_bloodhound_bmp_size);
     context->pg_references[GIBRALTAR] = pixReadMemBmp(game_gibraltar_bmp, game_gibraltar_bmp_size);
@@ -612,6 +734,10 @@ static void apex_game_filter_destroy(void *data)
     pixDestroy(&context->banner_references[ESC_INVENTORY_BUTTON]);
     pixDestroy(&context->banner_references[GRAYBAR_INVENTORY_BUTTON]);
     pixDestroy(&context->banner_references[M_MAP_BUTTON]);
+    pixDestroy(&context->banner_references[PAD_MAP_BUTTON]);
+    pixDestroy(&context->banner_references[PAD_LOOTING_BUTTON]);
+    pixDestroy(&context->banner_references[PAD_INVENTORY_BUTTON]);
+    pixDestroy(&context->banner_references[PAD_TACTICAL_BUTTON]);
 
     for (character_name_t pg = 0; pg < CHARACTERS_NUM; pg++)
         pixDestroy(&context->pg_references[pg]);
@@ -681,6 +807,10 @@ static obs_properties_t *apex_game_filter_properties(void *data)
     obs_property_t *p;
 
     obs_properties_t *props = obs_properties_create();
+
+    p = obs_properties_add_list(props, "game_input", "Input device", OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
+    obs_property_list_add_string(p, "Mouse and Keyboard", "mk");
+    obs_property_list_add_string(p, "PlayStation Pad", "ps-pad");
 
     p = obs_properties_add_list(props, "game_lang", "Game Language", OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
     obs_property_list_add_string(p, "Italiano", "it");
