@@ -728,16 +728,8 @@ static void apex_game_filter_destroy(void *data)
 
     pixDestroy(&context->image);
 
-    pixDestroy(&context->banner_references[MAP_GAME_BUTTON]);
-    pixDestroy(&context->banner_references[GRENADE_GAME_BUTTON]);
-    pixDestroy(&context->banner_references[ESC_LOOTING_BUTTON]);
-    pixDestroy(&context->banner_references[ESC_INVENTORY_BUTTON]);
-    pixDestroy(&context->banner_references[GRAYBAR_INVENTORY_BUTTON]);
-    pixDestroy(&context->banner_references[M_MAP_BUTTON]);
-    pixDestroy(&context->banner_references[PAD_MAP_BUTTON]);
-    pixDestroy(&context->banner_references[PAD_LOOTING_BUTTON]);
-    pixDestroy(&context->banner_references[PAD_INVENTORY_BUTTON]);
-    pixDestroy(&context->banner_references[PAD_TACTICAL_BUTTON]);
+    for (enum area_name an = 0; an < AREAS_NUM; an++)
+        pixDestroy(&context->banner_references[an]);
 
     for (character_name_t pg = 0; pg < CHARACTERS_NUM; pg++)
         pixDestroy(&context->pg_references[pg]);
