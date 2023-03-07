@@ -806,24 +806,31 @@ static obs_properties_t *apex_game_filter_properties(void *data)
 
     obs_properties_t *props = obs_properties_create();
 
-    p = obs_properties_add_list(props, "game_input", "Input device", OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
+    obs_properties_t *group_1 = obs_properties_create();
+    obs_properties_t *group_2 = obs_properties_create();
+
+    obs_properties_add_group(props, "game_settin", "Game settings", OBS_GROUP_NORMAL, group_1);
+
+    p = obs_properties_add_list(group_1, "game_input", "Input device", OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
     obs_property_list_add_string(p, "Mouse and Keyboard", "mk");
     obs_property_list_add_string(p, "PlayStation Pad", "ps-pad");
 
-    p = obs_properties_add_list(props, "game_lang", "Game Language", OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
+    p = obs_properties_add_list(group_1, "game_lang", "Game Language", OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
     obs_property_list_add_string(p, "Italiano", "it");
     obs_property_list_add_string(p, "English", "en");
 
-    p = obs_properties_add_list(props, "game_source", "Game Overlay Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
+    obs_properties_add_group(props, "sources", "Sources configuration", OBS_GROUP_NORMAL, group_2);
+
+    p = obs_properties_add_list(group_2, "game_source", "Game Overlay Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
     obs_enum_sources(list_add_sources, p);
 
-    p = obs_properties_add_list(props, "inventory_source", "Game Inventory Overlay Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
+    p = obs_properties_add_list(group_2, "inventory_source", "Game Inventory Overlay Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
     obs_enum_sources(list_add_sources, p);
 
-    p = obs_properties_add_list(props, "looting_source", "Game Looting Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
+    p = obs_properties_add_list(group_2, "looting_source", "Game Looting Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
     obs_enum_sources(list_add_sources, p);
 
-    p = obs_properties_add_list(props, "map_source", "Game Map Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
+    p = obs_properties_add_list(group_2, "map_source", "Game Map Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
     obs_enum_sources(list_add_sources, p);
 
     obs_properties_add_bool(props, "debug_mode", "Enable debug messages");
