@@ -515,6 +515,9 @@ static void match_ps4pad(apex_game_filter_context_t *filter)
 
 static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t cy)
 {
+    UNUSED_PARAMETER(cx);
+    UNUSED_PARAMETER(cy);
+
     apex_game_filter_context_t *filter = data;
 
     if (filter->closing)
@@ -649,6 +652,7 @@ static void apex_game_filter_update(void *data, obs_data_t *settings)
 
 static void apex_game_filter_defaults(obs_data_t *settings)
 {
+    UNUSED_PARAMETER(settings);
 }
 
 static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
@@ -754,6 +758,8 @@ static void apex_game_filter_destroy(void *data)
 
 static void apex_game_filter_tick(void *data, float seconds)
 {
+    UNUSED_PARAMETER(seconds);
+
     apex_game_filter_context_t *filter = data;
 
     if (filter->closing)
@@ -836,6 +842,8 @@ static void apex_game_filter_render(void *data, gs_effect_t *effect)
 
 static void apex_game_filter_filter_remove(void *data, obs_source_t *parent)
 {
+    UNUSED_PARAMETER(parent);
+
     apex_game_filter_context_t *filter = data;
 
     filter->closing = true;
