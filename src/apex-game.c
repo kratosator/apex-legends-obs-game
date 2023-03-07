@@ -655,56 +655,56 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
 {
     binfo("creating new filter");
 
-    apex_game_filter_context_t *context = bzalloc(sizeof(apex_game_filter_context_t));
+    apex_game_filter_context_t *filter = bzalloc(sizeof(apex_game_filter_context_t));
 
-    context->source = source;
-    context->texrender = gs_texrender_create(GS_RGBA, GS_ZS_NONE);
+    filter->source = source;
+    filter->texrender = gs_texrender_create(GS_RGBA, GS_ZS_NONE);
 
-    context->image = pixCreate(1920, 1080, 32);
+    filter->image = pixCreate(1920, 1080, 32);
 
-    context->banner_references[MAP_GAME_BUTTON] = pixReadMemBmp(ref_game_map_bmp, ref_game_map_bmp_size);
-    context->banner_references[GRENADE_GAME_BUTTON] = pixReadMemBmp(ref_game_grenade_bmp, ref_game_grenade_bmp_size);
-    context->banner_references[ESC_LOOTING_BUTTON] = pixReadMemBmp(ref_looting_bmp, ref_looting_bmp_size);
-    context->banner_references[ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
-    context->banner_references[GRAYBAR_INVENTORY_BUTTON] = pixReadMemBmp(ref_graybar_inventory_bmp, ref_graybar_inventory_bmp_size);
-    context->banner_references[M_MAP_BUTTON] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
-    context->banner_references[PAD_MAP_BUTTON] = pixReadMemBmp(ref_pad_map_bmp, ref_pad_map_bmp_size);
-    context->banner_references[PAD_LOOTING_BUTTON] = pixReadMemBmp(ref_pad_looting_bmp, ref_pad_looting_bmp_size);
-    context->banner_references[PAD_INVENTORY_BUTTON] = pixReadMemBmp(ref_pad_inventory_bmp, ref_pad_inventory_bmp_size);
-    context->banner_references[PAD_TACTICAL_BUTTON] = pixReadMemBmp(ref_pad_tactical_bmp, ref_pad_tactical_bmp_size);
+    filter->banner_references[MAP_GAME_BUTTON] = pixReadMemBmp(ref_game_map_bmp, ref_game_map_bmp_size);
+    filter->banner_references[GRENADE_GAME_BUTTON] = pixReadMemBmp(ref_game_grenade_bmp, ref_game_grenade_bmp_size);
+    filter->banner_references[ESC_LOOTING_BUTTON] = pixReadMemBmp(ref_looting_bmp, ref_looting_bmp_size);
+    filter->banner_references[ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
+    filter->banner_references[GRAYBAR_INVENTORY_BUTTON] = pixReadMemBmp(ref_graybar_inventory_bmp, ref_graybar_inventory_bmp_size);
+    filter->banner_references[M_MAP_BUTTON] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
+    filter->banner_references[PAD_MAP_BUTTON] = pixReadMemBmp(ref_pad_map_bmp, ref_pad_map_bmp_size);
+    filter->banner_references[PAD_LOOTING_BUTTON] = pixReadMemBmp(ref_pad_looting_bmp, ref_pad_looting_bmp_size);
+    filter->banner_references[PAD_INVENTORY_BUTTON] = pixReadMemBmp(ref_pad_inventory_bmp, ref_pad_inventory_bmp_size);
+    filter->banner_references[PAD_TACTICAL_BUTTON] = pixReadMemBmp(ref_pad_tactical_bmp, ref_pad_tactical_bmp_size);
 
-    context->pg_references[BLOODHOUND] = pixReadMemBmp(game_bloodhound_bmp, game_bloodhound_bmp_size);
-    context->pg_references[GIBRALTAR] = pixReadMemBmp(game_gibraltar_bmp, game_gibraltar_bmp_size);
-    context->pg_references[LIFELINE] = pixReadMemBmp(game_lifeline_bmp, game_lifeline_bmp_size);
-    context->pg_references[PATHFINDER] = pixReadMemBmp(game_pathfinder_bmp, game_pathfinder_bmp_size);
-    context->pg_references[WRAITH] = pixReadMemBmp(game_wraith_bmp, game_wraith_bmp_size);
-    context->pg_references[BANGALORE] = pixReadMemBmp(game_bangalore_bmp, game_bangalore_bmp_size);
-    context->pg_references[CAUSTIC] = pixReadMemBmp(game_caustic_bmp, game_caustic_bmp_size);
-    context->pg_references[MIRAGE] = pixReadMemBmp(game_mirage_bmp, game_mirage_bmp_size);
-    context->pg_references[OCTANE] = pixReadMemBmp(game_octane_bmp, game_octane_bmp_size);
-    context->pg_references[WATTSON] = pixReadMemBmp(game_wattson_bmp, game_wattson_bmp_size);
-    context->pg_references[CRYPTO] = pixReadMemBmp(game_crypto_bmp, game_crypto_bmp_size);
-    context->pg_references[REVENANT] = pixReadMemBmp(game_revenant_bmp, game_revenant_bmp_size);
-    context->pg_references[LOBA] = pixReadMemBmp(game_loba_bmp, game_loba_bmp_size);
-    context->pg_references[RAMPART] = pixReadMemBmp(game_rampart_bmp, game_rampart_bmp_size);
-    context->pg_references[HORIZON] = pixReadMemBmp(game_horizon_bmp, game_horizon_bmp_size);
-    context->pg_references[FUSE] = pixReadMemBmp(game_fuse_bmp, game_fuse_bmp_size);
-    context->pg_references[VALKYRIE] = pixReadMemBmp(game_valkyrie_bmp, game_valkyrie_bmp_size);
-    context->pg_references[SEER] = pixReadMemBmp(game_seer_bmp, game_seer_bmp_size);
-    context->pg_references[ASH] = pixReadMemBmp(game_ash_bmp, game_ash_bmp_size);
-    context->pg_references[MADMAGGIE] = pixReadMemBmp(game_madmaggie_bmp, game_madmaggie_bmp_size);
-    context->pg_references[NEWCASTLE] = pixReadMemBmp(game_newcastle_bmp, game_newcastle_bmp_size);
-    context->pg_references[VANTAGE] = pixReadMemBmp(game_vantage_bmp, game_vantage_bmp_size);
-    context->pg_references[CATALYST] = pixReadMemBmp(game_catalyst_bmp, game_catalyst_bmp_size);
+    filter->pg_references[BLOODHOUND] = pixReadMemBmp(game_bloodhound_bmp, game_bloodhound_bmp_size);
+    filter->pg_references[GIBRALTAR] = pixReadMemBmp(game_gibraltar_bmp, game_gibraltar_bmp_size);
+    filter->pg_references[LIFELINE] = pixReadMemBmp(game_lifeline_bmp, game_lifeline_bmp_size);
+    filter->pg_references[PATHFINDER] = pixReadMemBmp(game_pathfinder_bmp, game_pathfinder_bmp_size);
+    filter->pg_references[WRAITH] = pixReadMemBmp(game_wraith_bmp, game_wraith_bmp_size);
+    filter->pg_references[BANGALORE] = pixReadMemBmp(game_bangalore_bmp, game_bangalore_bmp_size);
+    filter->pg_references[CAUSTIC] = pixReadMemBmp(game_caustic_bmp, game_caustic_bmp_size);
+    filter->pg_references[MIRAGE] = pixReadMemBmp(game_mirage_bmp, game_mirage_bmp_size);
+    filter->pg_references[OCTANE] = pixReadMemBmp(game_octane_bmp, game_octane_bmp_size);
+    filter->pg_references[WATTSON] = pixReadMemBmp(game_wattson_bmp, game_wattson_bmp_size);
+    filter->pg_references[CRYPTO] = pixReadMemBmp(game_crypto_bmp, game_crypto_bmp_size);
+    filter->pg_references[REVENANT] = pixReadMemBmp(game_revenant_bmp, game_revenant_bmp_size);
+    filter->pg_references[LOBA] = pixReadMemBmp(game_loba_bmp, game_loba_bmp_size);
+    filter->pg_references[RAMPART] = pixReadMemBmp(game_rampart_bmp, game_rampart_bmp_size);
+    filter->pg_references[HORIZON] = pixReadMemBmp(game_horizon_bmp, game_horizon_bmp_size);
+    filter->pg_references[FUSE] = pixReadMemBmp(game_fuse_bmp, game_fuse_bmp_size);
+    filter->pg_references[VALKYRIE] = pixReadMemBmp(game_valkyrie_bmp, game_valkyrie_bmp_size);
+    filter->pg_references[SEER] = pixReadMemBmp(game_seer_bmp, game_seer_bmp_size);
+    filter->pg_references[ASH] = pixReadMemBmp(game_ash_bmp, game_ash_bmp_size);
+    filter->pg_references[MADMAGGIE] = pixReadMemBmp(game_madmaggie_bmp, game_madmaggie_bmp_size);
+    filter->pg_references[NEWCASTLE] = pixReadMemBmp(game_newcastle_bmp, game_newcastle_bmp_size);
+    filter->pg_references[VANTAGE] = pixReadMemBmp(game_vantage_bmp, game_vantage_bmp_size);
+    filter->pg_references[CATALYST] = pixReadMemBmp(game_catalyst_bmp, game_catalyst_bmp_size);
 
-    context->debug_mode = false;
-    context->debug_counter = 0;
+    filter->debug_mode = false;
+    filter->debug_counter = 0;
 
-    apex_game_filter_update(context, settings);
+    apex_game_filter_update(filter, settings);
 
-    obs_add_main_render_callback(apex_game_filter_offscreen_render, context);
+    obs_add_main_render_callback(apex_game_filter_offscreen_render, filter);
 
-    return context;
+    return filter;
 }
 
 static release_source(obs_weak_source_t *weak_source)
@@ -722,44 +722,44 @@ static void apex_game_filter_destroy(void *data)
 {
     binfo("destroing filter");
 
-    apex_game_filter_context_t *context = data;
+    apex_game_filter_context_t *filter = data;
 
-    context->closing = true;
+    filter->closing = true;
 
-    pixDestroy(&context->image);
+    pixDestroy(&filter->image);
 
     for (enum area_name an = 0; an < AREAS_NUM; an++)
-        pixDestroy(&context->banner_references[an]);
+        pixDestroy(&filter->banner_references[an]);
 
     for (character_name_t pg = 0; pg < CHARACTERS_NUM; pg++)
-        pixDestroy(&context->pg_references[pg]);
+        pixDestroy(&filter->pg_references[pg]);
 
-    obs_remove_main_render_callback(apex_game_filter_offscreen_render, context);
+    obs_remove_main_render_callback(apex_game_filter_offscreen_render, filter);
 
-    release_source(context->target_sources[BANNER_GAME]);
-    release_source(context->target_sources[BANNER_LOOTING]);
-    release_source(context->target_sources[BANNER_INVENTORY]);
-    release_source(context->target_sources[BANNER_MAP]);
+    release_source(filter->target_sources[BANNER_GAME]);
+    release_source(filter->target_sources[BANNER_LOOTING]);
+    release_source(filter->target_sources[BANNER_INVENTORY]);
+    release_source(filter->target_sources[BANNER_MAP]);
 
     obs_enter_graphics();
 
-    gs_stagesurface_unmap(context->stagesurface);
-    gs_stagesurface_destroy(context->stagesurface);
-    gs_texrender_destroy(context->texrender);
+    gs_stagesurface_unmap(filter->stagesurface);
+    gs_stagesurface_destroy(filter->stagesurface);
+    gs_texrender_destroy(filter->texrender);
 
     obs_leave_graphics();
 
-    bfree(context);
+    bfree(filter);
 }
 
 static void apex_game_filter_tick(void *data, float seconds)
 {
-    apex_game_filter_context_t *context = data;
+    apex_game_filter_context_t *filter = data;
 
-    if (context->closing)
+    if (filter->closing)
         return;
 
-    obs_source_t *parent = obs_filter_get_parent(context->source);
+    obs_source_t *parent = obs_filter_get_parent(filter->source);
 
     if (!parent)
         return;
@@ -770,11 +770,11 @@ static void apex_game_filter_tick(void *data, float seconds)
     width += (width & 1);
     height += (height & 1);
 
-    if (context->width != width || context->height != height) {
+    if (filter->width != width || filter->height != height) {
         bdebug("new size, width: %d, height: %d", width, height);
 
-        context->width = width;
-        context->height = height;
+        filter->width = width;
+        filter->height = height;
     }
 }
 
@@ -795,7 +795,7 @@ static bool list_add_sources(void *data, obs_source_t *source)
 
 static obs_properties_t *apex_game_filter_properties(void *data)
 {
-    apex_game_filter_context_t *s = data;
+    apex_game_filter_context_t *filter = data;
     obs_property_t *p;
 
     obs_properties_t *props = obs_properties_create();
@@ -829,18 +829,18 @@ static void apex_game_filter_render(void *data, gs_effect_t *effect)
 {
     UNUSED_PARAMETER(effect);
 
-    apex_game_filter_context_t *context = data;
+    apex_game_filter_context_t *filter = data;
 
-    obs_source_skip_video_filter(context->source);
+    obs_source_skip_video_filter(filter->source);
 }
 
 static void apex_game_filter_filter_remove(void *data, obs_source_t *parent)
 {
-    apex_game_filter_context_t *context = data;
+    apex_game_filter_context_t *filter = data;
 
-    context->closing = true;
+    filter->closing = true;
 
-    obs_remove_main_render_callback(apex_game_filter_offscreen_render, context);
+    obs_remove_main_render_callback(apex_game_filter_offscreen_render, filter);
 }
 
 struct obs_source_info apex_game_filter_info = {
