@@ -421,7 +421,16 @@ static void match_mk(apex_game_filter_context_t *filter)
      * 100% sure that we can move to that scene
      */
     check_banner(filter, ESC_LOOTING_BUTTON, BANNER_LOOTING);
-    check_banner(filter, M_MAP_BUTTON, BANNER_MAP);
+
+    /*
+     * checking map in control game mode moves the M button a little bit
+     * with respect to all other game modes
+     */
+    bool map_button = get_area_status(filter, M_MAP_BUTTON);
+    bool map_button_offset = get_area_status_withoffset(filter, M_MAP_BUTTON, -2);
+    bool activate_map = map_button || map_button_offset;
+
+    set_source_status(filter->target_sources[BANNER_MAP], activate_map);
 
     /*
      * if inventory ESC button is found a further check must performed if inventory tab
@@ -463,10 +472,14 @@ static void match_mk(apex_game_filter_context_t *filter)
 static void match_ps4pad(apex_game_filter_context_t *filter)
 {
     /*
-     * if the area of interest matches the reference image we are
-     * 100% sure that we can move to that scene
+     * checking map in control game mode moves the M button a little bit
+     * with respect to all other game modes
      */
-    check_banner(filter, PAD_MAP_BUTTON, BANNER_MAP);
+    bool pad_map = get_area_status(filter, PAD_MAP_BUTTON);
+    bool pad_map_offset = get_area_status_withoffset(filter, PAD_MAP_BUTTON, -2);
+    bool activate_map = pad_map || pad_map_offset;
+
+    set_source_status(filter->target_sources[BANNER_MAP], activate_map);
 
     /*
      * there's a funny behaviour if you use m&k and pad at the same time,
