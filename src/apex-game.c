@@ -201,9 +201,9 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define PG_BANNER_IMAGE_H               36
 
 #define PAD_MAP_BUTTON_X                55
-#define PAD_MAP_BUTTON_Y                1030
+#define PAD_MAP_BUTTON_Y                1022
 #define PAD_MAP_BUTTON_W                52
-#define PAD_MAP_BUTTON_H                35
+#define PAD_MAP_BUTTON_H                51
 
 #define PAD_LOOTING_BUTTON_X_IT         525
 #define PAD_LOOTING_BUTTON_X_EN         536
