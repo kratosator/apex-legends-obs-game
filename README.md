@@ -36,7 +36,7 @@ Compile the plugin or download the latest release available. Place `apex-game.dl
 
 Configuration is pretty straight forward, apply the filter "Apex Game" on the source/scene that contains Apex Legends gameplay. Configure your input device and game's language and set sources in the menu, each source will be activated only when the corresponding HUD condition is showed in the game.
 
-[![Configuration example](https://i.imgur.com/eMTp2e3.png)](https://i.imgur.com/eMTp2e3.png)
+[![Configuration example](https://i.imgur.com/Z6FT0l3.png)](https://i.imgur.com/Z6FT0l3.png)
 
 ## Screenshots
 
