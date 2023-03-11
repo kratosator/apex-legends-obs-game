@@ -419,6 +419,130 @@ static character_name_t get_pg_showed(apex_game_filter_context_t *filter)
     return pg;
 }
 
+#define BOX_START_X         290
+#define BOX_START_Y         790
+#define BOX_WIDTH           260
+#define BOX_HEIGHT          185
+#define BOX_END_X           (BOX_START_X + BOX_WIDTH)
+#define BOX_END_Y           (BOX_START_Y + BOX_HEIGHT)
+
+#define MIN_LINE_LENGTH     75
+
+#define GRAY_POINT          150
+#define GRAY_MAX_DIFF       15
+#define GRAY_MIN            (GRAY_POINT - GRAY_MAX_DIFF)
+#define GRAY_MAX            (GRAY_POINT + GRAY_MAX_DIFF)
+#define GRAY_COMP_MAX_DIFF  8
+
+static bool check_rgb(int r, int g, int b)
+{
+    if (abs(r - g) > GRAY_COMP_MAX_DIFF ||
+        abs(g - b) > GRAY_COMP_MAX_DIFF ||
+        abs(r - b) > GRAY_COMP_MAX_DIFF)
+        return false;
+
+    if (r < GRAY_MIN || r > GRAY_MAX)
+        return false;
+
+    if (g < GRAY_MIN || g > GRAY_MAX)
+        return false;
+
+    if (b < GRAY_MIN || b > GRAY_MAX)
+        return false;
+
+    return true;
+}
+
+#define GRAY_LINE_BANNER_DEFAULT_Y          926
+#define GRAY_LINE_BANNER_DEFAULT_X_END      450
+#define GRAY_LINE_BANNER_DEFAULT_DIFF       87
+
+struct gray_line
+{
+    int pixel_count;
+    int end_x;
+    int y;
+    bool found;
+};
+
+static bool find_banner_gray_lines(apex_game_filter_context_t *filter, struct gray_line lines[4])
+{
+    int x, y, check_x, r, g, b, count, line;
+    area_t a =
+    {
+        .x = BOX_START_X,
+        .y = BOX_START_Y,
+        .w = BOX_WIDTH,
+        .h = BOX_HEIGHT
+    };
+
+    lines[0].found = false;
+    lines[1].found = false;
+
+    fill_area(filter->image, filter->video_data, filter->width, filter->height, &a, 0);
+
+    x = BOX_START_X;
+    y = BOX_END_Y;
+
+    line = 0;
+
+    while (y > BOX_START_Y) {
+        pixGetRGBPixel(filter->image, x, y, &r, &g, &b);
+
+        if (check_rgb(r, g, b)) {
+            count = 0;
+            for (check_x = BOX_START_X; check_x < (BOX_START_X + BOX_WIDTH); check_x++) {
+                pixGetRGBPixel(filter->image, check_x, y, &r, &g, &b);
+
+                if (!check_rgb(r, g, b))
+                    break;
+
+                count++;
+            }
+
+            if (count > MIN_LINE_LENGTH) {
+                if (debug_should_print(filter))
+                    binfo("found line %d %d", y, lines[line].y);
+
+                bool line_found = lines[line].found;
+                bool line_dist_near_with_pred = y - lines[line-1].y;
+                bool line_first = line == 0;
+
+                if (!line_found ||
+                    (line_found && !line_first && !line_dist_near_with_pred)) {
+                    lines[line].pixel_count = count;
+                    lines[line].end_x = check_x;
+                    lines[line].y = y;
+                    lines[line].found = true;
+
+                    line++;
+                }
+            }
+
+            if (line == 2)
+                break;
+        }
+
+        y--;
+    }
+
+    if (debug_should_print(filter)) {
+        binfo("line 1: %d %d %d %d", lines[0].found, lines[0].pixel_count, lines[0].end_x, lines[0].y);
+        binfo("line 2: %d %d %d %d", lines[1].found, lines[1].pixel_count, lines[1].end_x, lines[1].y);
+        binfo("line distance: %d", lines[0].y - lines[1].y);
+
+        save_image_area(filter, &a, "GRAYBAR_BAR");
+    }
+
+    if (line == 2) {
+        int line_diff = lines[0].y - lines[1].y;
+        if (line_diff == GRAY_LINE_BANNER_DEFAULT_DIFF)
+            return true;
+    }
+
+    return false;
+}
+
 static void match_mk(apex_game_filter_context_t *filter)
 {
     /*
@@ -507,6 +631,13 @@ static void match_ps4pad(apex_game_filter_context_t *filter)
     bool pad_inventory = get_area_status(filter, PAD_INVENTORY_BUTTON);
     bool pad_inventory_offset = get_area_status_withoffset(filter, PAD_INVENTORY_BUTTON, -8);
     bool activate_inventory = pad_inventory || pad_inventory_offset;
+
+    if (activate_inventory) {
+        struct gray_line lines[2];
+        bool gray_line_found = find_banner_gray_lines(filter, lines);
+
+        activate_inventory =  gray_line_found;
+    }
 
     set_source_status(filter->target_sources[BANNER_INVENTORY], activate_inventory);
 
