@@ -326,22 +326,27 @@ static void save_ref_image(apex_game_filter_context_t *filter, area_name_t an)
     pixWrite(filename, filter->banner_references[an], IFF_PNG);
 }
 
-static void save_image(apex_game_filter_context_t *filter, area_name_t an)
+static void save_image_area(apex_game_filter_context_t *filter, const area_t *a, const char *n)
 {
     char filename[DEBUG_SAVE_PATH_NAME_LEN];
-
-    const area_t *a = &(filter->areas[an]);
-    const char *name = area_name_str[an];
 
     BOX *box = boxCreate(a->x, a->y, a->w, a->h);
     PIX *rectangle = pixClipRectangle(filter->image, box, NULL);
 
-    snprintf(filename, DEBUG_SAVE_PATH_NAME_LEN, "%s\\image_%s.png", DEBUG_SAVE_PATH, name);
+    snprintf(filename, DEBUG_SAVE_PATH_NAME_LEN, "%s\\image_%s.png", DEBUG_SAVE_PATH, n);
 
     pixWrite(filename, rectangle, IFF_PNG);
 
     boxDestroy(&box);
     pixDestroy(&rectangle);
+}
+
+static void save_image(apex_game_filter_context_t *filter, area_name_t an)
+{
+    const area_t *a = &(filter->areas[an]);
+    const char *n = area_name_str[an];
+
+    save_image_area(filter, a, n);
 }
 
 static const char *apex_game_filter_get_name(void *unused)
