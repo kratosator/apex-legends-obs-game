@@ -9,7 +9,7 @@
 
 #include "images.h"
 
-#define PROJECT_VERSION "1.2.0"
+#define PROJECT_VERSION "1.3.0"
 
 #define DEBUG_FRAME_INTERVAL        300
 #define DEBUG_SAVE_PATH             "C:\\Temp"
