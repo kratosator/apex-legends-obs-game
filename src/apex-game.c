@@ -133,6 +133,13 @@ enum input_device
     INPUT_DEVICES_NUM
 };
 
+enum display_resolution
+{
+    DISPLAY_1080P,
+
+    DISPLAY_RESOLUTIONS
+};
+
 enum game_language
 {
     LANGUAGE_IT,
@@ -153,14 +160,15 @@ typedef struct area area_t;
 struct apex_game_filter_context
 {
     PIX *image;
-    PIX *banner_references[AREAS_NUM];
-    PIX *pg_references[CHARACTERS_NUM];
+    PIX *banner_references[DISPLAY_RESOLUTIONS][AREAS_NUM];
+    PIX *pg_references[DISPLAY_RESOLUTIONS][CHARACTERS_NUM];
     obs_source_t *source;
     obs_weak_source_t *target_sources[BANNER_POSITION_NUM];
     uint8_t *video_data;
     uint32_t video_linesize;
     uint32_t width;
     uint32_t height;
+    enum display_resolution display;
     enum input_device input;
     enum game_language language;
     gs_texrender_t *texrender;
@@ -232,7 +240,7 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define PAD_TACTICAL_BUTTON_W           22
 #define PAD_TACTICAL_BUTTON_H           12
 
-static const area_t areas_en[AREAS_NUM] =
+static const area_t areas_1080p_en[AREAS_NUM] =
 {
     [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_X,            MAP_GAME_BUTTON_Y,          MAP_GAME_BUTTON_W,          MAP_GAME_BUTTON_H           },
     [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_X,        GRENADE_GAME_BUTTON_Y,      GRENADE_GAME_BUTTON_W,      GRENADE_GAME_BUTTON_H       },
@@ -247,7 +255,7 @@ static const area_t areas_en[AREAS_NUM] =
     [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X_IT,     PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
 };
 
-static const area_t areas_it[AREAS_NUM] =
+static const area_t areas_1080p_it[AREAS_NUM] =
 {
     [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_X,            MAP_GAME_BUTTON_Y,          MAP_GAME_BUTTON_W,          MAP_GAME_BUTTON_H           },
     [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_X,        GRENADE_GAME_BUTTON_Y,      GRENADE_GAME_BUTTON_W,      GRENADE_GAME_BUTTON_H       },
@@ -332,7 +340,7 @@ static void save_ref_image(apex_game_filter_context_t *filter, area_name_t an)
 
     snprintf(filename, DEBUG_SAVE_PATH_NAME_LEN, "%s\\ref_%s.png", DEBUG_SAVE_PATH, name);
 
-    pixWrite(filename, filter->banner_references[an], IFF_PNG);
+    pixWrite(filename, filter->banner_references[filter->display][an], IFF_PNG);
 }
 
 static void save_image_area(apex_game_filter_context_t *filter, const area_t *a, const char *n)
@@ -377,7 +385,7 @@ static bool get_area_status_withoffset(apex_game_filter_context_t *filter, area_
     const area_t *a = &(filter->areas[an]);
 
     fill_area(filter->image, filter->video_data, filter->width, filter->height, a, xoff);
-    float psnr = compare_psnr_value_of_area_with_offset(filter->image, filter->banner_references[an], a, xoff);
+    float psnr = compare_psnr_value_of_area_with_offset(filter->image, filter->banner_references[filter->display][an], a, xoff);
 
     bool match = psnr > PSNR_THRESHOLD_VALUE;
 
@@ -416,7 +424,7 @@ static character_name_t get_pg_showed(apex_game_filter_context_t *filter)
     }
 
     for (pg = 0; pg < CHARACTERS_NUM; pg++) {
-        float psnr = compare_psnr_value_of_area(filter->image, filter->pg_references[pg], &(filter->areas[PG_BANNER_IMAGE]));
+        float psnr = compare_psnr_value_of_area(filter->image, filter->pg_references[filter->display][pg], &(filter->areas[PG_BANNER_IMAGE]));
 
         if (debug_should_print(filter))
             binfo("%s: %f", character_name_str[pg], psnr);
@@ -432,16 +440,35 @@ static character_name_t get_pg_showed(apex_game_filter_context_t *filter)
 #define BOX_START_Y         790
 #define BOX_WIDTH           260
 #define BOX_HEIGHT          185
-#define BOX_END_X           (BOX_START_X + BOX_WIDTH)
-#define BOX_END_Y           (BOX_START_Y + BOX_HEIGHT)
 
 #define MIN_LINE_LENGTH     75
+
+#define GRAY_LINE_BANNER_DEFAULT_Y          926
+#define GRAY_LINE_BANNER_DEFAULT_X_END      450
+#define GRAY_LINE_BANNER_DEFAULT_DIFF       87
 
 #define GRAY_POINT          150
 #define GRAY_MAX_DIFF       15
 #define GRAY_MIN            (GRAY_POINT - GRAY_MAX_DIFF)
 #define GRAY_MAX            (GRAY_POINT + GRAY_MAX_DIFF)
 #define GRAY_COMP_MAX_DIFF  8
+
+struct gray_line_searcher_ref
+{
+    uint32_t box_start_x;
+    uint32_t box_start_y;
+    uint32_t box_witdh;
+    uint32_t box_height;
+    uint32_t min_line_length;
+    uint32_t default_grayline_y;
+    uint32_t default_grayline_x_end;
+    uint32_t default_grayline_diff;
+};
+
+const struct gray_line_searcher_ref line_searches[DISPLAY_RESOLUTIONS] =
+{
+    [DISPLAY_1080P] =   { BOX_START_X,      BOX_START_Y,    BOX_WIDTH,      BOX_HEIGHT,     MIN_LINE_LENGTH,    GRAY_LINE_BANNER_DEFAULT_Y,     GRAY_LINE_BANNER_DEFAULT_X_END,     GRAY_LINE_BANNER_DEFAULT_DIFF       },
+};
 
 static bool check_rgb(int r, int g, int b)
 {
@@ -462,10 +489,6 @@ static bool check_rgb(int r, int g, int b)
     return true;
 }
 
-#define GRAY_LINE_BANNER_DEFAULT_Y          926
-#define GRAY_LINE_BANNER_DEFAULT_X_END      450
-#define GRAY_LINE_BANNER_DEFAULT_DIFF       87
-
 struct gray_line
 {
     int pixel_count;
@@ -474,15 +497,17 @@ struct gray_line
     bool found;
 };
 
-static bool find_banner_gray_lines(apex_game_filter_context_t *filter, struct gray_line lines[4])
+static bool find_banner_gray_lines(apex_game_filter_context_t *filter, struct gray_line lines[2])
 {
-    int x, y, check_x, r, g, b, count, line;
+    uint32_t x, y, check_x, r, g, b, count, line;
+    const struct gray_line_searcher_ref *ls = &line_searches[filter->display];
+
     area_t a =
     {
-        .x = BOX_START_X,
-        .y = BOX_START_Y,
-        .w = BOX_WIDTH,
-        .h = BOX_HEIGHT
+        .x = ls->box_start_x,
+        .y = ls->box_start_y,
+        .w = ls->box_witdh,
+        .h = ls->box_height
     };
 
     lines[0].found = false;
@@ -490,17 +515,17 @@ static bool find_banner_gray_lines(apex_game_filter_context_t *filter, struct gr
 
     fill_area(filter->image, filter->video_data, filter->width, filter->height, &a, 0);
 
-    x = BOX_START_X;
-    y = BOX_END_Y;
+    x = ls->box_start_x;
+    y = ls->box_start_y + ls->box_height;
 
     line = 0;
 
-    while (y > BOX_START_Y) {
+    while (y > ls->box_start_y) {
         pixGetRGBPixel(filter->image, x, y, &r, &g, &b);
 
         if (check_rgb(r, g, b)) {
             count = 0;
-            for (check_x = BOX_START_X; check_x < (BOX_START_X + BOX_WIDTH); check_x++) {
+            for (check_x = ls->box_start_x; check_x < (ls->box_start_x + ls->box_witdh); check_x++) {
                 pixGetRGBPixel(filter->image, check_x, y, &r, &g, &b);
 
                 if (!check_rgb(r, g, b))
@@ -509,7 +534,7 @@ static bool find_banner_gray_lines(apex_game_filter_context_t *filter, struct gr
                 count++;
             }
 
-            if (count > MIN_LINE_LENGTH) {
+            if (count > ls->min_line_length) {
                 if (debug_should_print(filter))
                     binfo("found line %d %d", y, lines[line].y);
 
@@ -545,12 +570,23 @@ static bool find_banner_gray_lines(apex_game_filter_context_t *filter, struct gr
 
     if (line == 2) {
         int line_diff = lines[0].y - lines[1].y;
-        if (line_diff == GRAY_LINE_BANNER_DEFAULT_DIFF)
+        if (line_diff == ls->default_grayline_diff)
             return true;
     }
 
     return false;
 }
+
+int match_offsets[DISPLAY_RESOLUTIONS][AREAS_NUM] =
+{
+    [DISPLAY_1080P] =
+    {
+        [M_MAP_BUTTON] =            -2,
+        [PAD_MAP_BUTTON] =          -2,
+        [PAD_LOOTING_BUTTON] =      8,
+        [PAD_INVENTORY_BUTTON] =    -8
+    },
+};
 
 static void match_mk(apex_game_filter_context_t *filter)
 {
@@ -565,7 +601,7 @@ static void match_mk(apex_game_filter_context_t *filter)
      * with respect to all other game modes
      */
     bool map_button = get_area_status(filter, M_MAP_BUTTON);
-    bool map_button_offset = get_area_status_withoffset(filter, M_MAP_BUTTON, -2);
+    bool map_button_offset = get_area_status_withoffset(filter, M_MAP_BUTTON, match_offsets[filter->display][M_MAP_BUTTON]);
     bool activate_map = map_button || map_button_offset;
 
     set_source_status(filter->target_sources[BANNER_MAP], activate_map);
@@ -614,7 +650,7 @@ static void match_ps4pad(apex_game_filter_context_t *filter)
      * with respect to all other game modes
      */
     bool pad_map = get_area_status(filter, PAD_MAP_BUTTON);
-    bool pad_map_offset = get_area_status_withoffset(filter, PAD_MAP_BUTTON, -2);
+    bool pad_map_offset = get_area_status_withoffset(filter, PAD_MAP_BUTTON, match_offsets[filter->display][PAD_MAP_BUTTON]);
     bool activate_map = pad_map || pad_map_offset;
 
     set_source_status(filter->target_sources[BANNER_MAP], activate_map);
@@ -626,7 +662,7 @@ static void match_ps4pad(apex_game_filter_context_t *filter)
      * image twice considering that offset
      */
     bool pad_looting = get_area_status(filter, PAD_LOOTING_BUTTON);
-    bool pad_looting_offset = get_area_status_withoffset(filter, PAD_LOOTING_BUTTON, 8);
+    bool pad_looting_offset = get_area_status_withoffset(filter, PAD_LOOTING_BUTTON, match_offsets[filter->display][PAD_LOOTING_BUTTON]);
     bool activate_looting = pad_looting || pad_looting_offset;
 
     set_source_status(filter->target_sources[BANNER_LOOTING], activate_looting);
@@ -638,7 +674,7 @@ static void match_ps4pad(apex_game_filter_context_t *filter)
      * necessary to move the source in the correct position
      */
     bool pad_inventory = get_area_status(filter, PAD_INVENTORY_BUTTON);
-    bool pad_inventory_offset = get_area_status_withoffset(filter, PAD_INVENTORY_BUTTON, -8);
+    bool pad_inventory_offset = get_area_status_withoffset(filter, PAD_INVENTORY_BUTTON, match_offsets[filter->display][PAD_INVENTORY_BUTTON]);
     bool activate_inventory = pad_inventory || pad_inventory_offset;
 
     if (activate_inventory) {
@@ -691,7 +727,7 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     if (!filter->width || !filter->height)
         return;
 
-    if (filter->width != 1920 || filter->height != 1080)
+    if (filter->display == DISPLAY_RESOLUTIONS)
         return;
 
     gs_texrender_reset(filter->texrender);
@@ -738,10 +774,12 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     if (!gs_stagesurface_map(filter->stagesurface, &filter->video_data, &filter->video_linesize))
         return;
 
-    if (filter->language == LANGUAGE_EN)
-        filter->areas = areas_en;
-    else if (filter->language == LANGUAGE_IT)
-        filter->areas = areas_it;
+    if (filter->display == DISPLAY_1080P) {
+        if (filter->language == LANGUAGE_EN)
+            filter->areas = areas_1080p_en;
+        else if (filter->language == LANGUAGE_IT)
+            filter->areas = areas_1080p_it;
+    }
 
     if (filter->input == MOUSE_AND_KEYBOARD)
         match_mk(filter);
@@ -818,6 +856,44 @@ static void apex_game_filter_defaults(obs_data_t *settings)
     UNUSED_PARAMETER(settings);
 }
 
+static void load_1080p_references(apex_game_filter_context_t *filter)
+{
+    filter->banner_references[DISPLAY_1080P][MAP_GAME_BUTTON] = pixReadMemBmp(ref_game_map_bmp, ref_game_map_bmp_size);
+    filter->banner_references[DISPLAY_1080P][GRENADE_GAME_BUTTON] = pixReadMemBmp(ref_game_grenade_bmp, ref_game_grenade_bmp_size);
+    filter->banner_references[DISPLAY_1080P][ESC_LOOTING_BUTTON] = pixReadMemBmp(ref_looting_bmp, ref_looting_bmp_size);
+    filter->banner_references[DISPLAY_1080P][ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
+    filter->banner_references[DISPLAY_1080P][GRAYBAR_INVENTORY_BUTTON] = pixReadMemBmp(ref_graybar_inventory_bmp, ref_graybar_inventory_bmp_size);
+    filter->banner_references[DISPLAY_1080P][M_MAP_BUTTON] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
+    filter->banner_references[DISPLAY_1080P][PAD_MAP_BUTTON] = pixReadMemBmp(ref_pad_map_bmp, ref_pad_map_bmp_size);
+    filter->banner_references[DISPLAY_1080P][PAD_LOOTING_BUTTON] = pixReadMemBmp(ref_pad_looting_bmp, ref_pad_looting_bmp_size);
+    filter->banner_references[DISPLAY_1080P][PAD_INVENTORY_BUTTON] = pixReadMemBmp(ref_pad_inventory_bmp, ref_pad_inventory_bmp_size);
+    filter->banner_references[DISPLAY_1080P][PAD_TACTICAL_BUTTON] = pixReadMemBmp(ref_pad_tactical_bmp, ref_pad_tactical_bmp_size);
+
+    filter->pg_references[DISPLAY_1080P][BLOODHOUND] = pixReadMemBmp(game_bloodhound_bmp, game_bloodhound_bmp_size);
+    filter->pg_references[DISPLAY_1080P][GIBRALTAR] = pixReadMemBmp(game_gibraltar_bmp, game_gibraltar_bmp_size);
+    filter->pg_references[DISPLAY_1080P][LIFELINE] = pixReadMemBmp(game_lifeline_bmp, game_lifeline_bmp_size);
+    filter->pg_references[DISPLAY_1080P][PATHFINDER] = pixReadMemBmp(game_pathfinder_bmp, game_pathfinder_bmp_size);
+    filter->pg_references[DISPLAY_1080P][WRAITH] = pixReadMemBmp(game_wraith_bmp, game_wraith_bmp_size);
+    filter->pg_references[DISPLAY_1080P][BANGALORE] = pixReadMemBmp(game_bangalore_bmp, game_bangalore_bmp_size);
+    filter->pg_references[DISPLAY_1080P][CAUSTIC] = pixReadMemBmp(game_caustic_bmp, game_caustic_bmp_size);
+    filter->pg_references[DISPLAY_1080P][MIRAGE] = pixReadMemBmp(game_mirage_bmp, game_mirage_bmp_size);
+    filter->pg_references[DISPLAY_1080P][OCTANE] = pixReadMemBmp(game_octane_bmp, game_octane_bmp_size);
+    filter->pg_references[DISPLAY_1080P][WATTSON] = pixReadMemBmp(game_wattson_bmp, game_wattson_bmp_size);
+    filter->pg_references[DISPLAY_1080P][CRYPTO] = pixReadMemBmp(game_crypto_bmp, game_crypto_bmp_size);
+    filter->pg_references[DISPLAY_1080P][REVENANT] = pixReadMemBmp(game_revenant_bmp, game_revenant_bmp_size);
+    filter->pg_references[DISPLAY_1080P][LOBA] = pixReadMemBmp(game_loba_bmp, game_loba_bmp_size);
+    filter->pg_references[DISPLAY_1080P][RAMPART] = pixReadMemBmp(game_rampart_bmp, game_rampart_bmp_size);
+    filter->pg_references[DISPLAY_1080P][HORIZON] = pixReadMemBmp(game_horizon_bmp, game_horizon_bmp_size);
+    filter->pg_references[DISPLAY_1080P][FUSE] = pixReadMemBmp(game_fuse_bmp, game_fuse_bmp_size);
+    filter->pg_references[DISPLAY_1080P][VALKYRIE] = pixReadMemBmp(game_valkyrie_bmp, game_valkyrie_bmp_size);
+    filter->pg_references[DISPLAY_1080P][SEER] = pixReadMemBmp(game_seer_bmp, game_seer_bmp_size);
+    filter->pg_references[DISPLAY_1080P][ASH] = pixReadMemBmp(game_ash_bmp, game_ash_bmp_size);
+    filter->pg_references[DISPLAY_1080P][MADMAGGIE] = pixReadMemBmp(game_madmaggie_bmp, game_madmaggie_bmp_size);
+    filter->pg_references[DISPLAY_1080P][NEWCASTLE] = pixReadMemBmp(game_newcastle_bmp, game_newcastle_bmp_size);
+    filter->pg_references[DISPLAY_1080P][VANTAGE] = pixReadMemBmp(game_vantage_bmp, game_vantage_bmp_size);
+    filter->pg_references[DISPLAY_1080P][CATALYST] = pixReadMemBmp(game_catalyst_bmp, game_catalyst_bmp_size);
+}
+
 static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
 {
     binfo("creating new filter");
@@ -829,43 +905,12 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
 
     filter->image = pixCreate(1920, 1080, 32);
 
-    filter->banner_references[MAP_GAME_BUTTON] = pixReadMemBmp(ref_game_map_bmp, ref_game_map_bmp_size);
-    filter->banner_references[GRENADE_GAME_BUTTON] = pixReadMemBmp(ref_game_grenade_bmp, ref_game_grenade_bmp_size);
-    filter->banner_references[ESC_LOOTING_BUTTON] = pixReadMemBmp(ref_looting_bmp, ref_looting_bmp_size);
-    filter->banner_references[ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_bmp, ref_inventory_bmp_size);
-    filter->banner_references[GRAYBAR_INVENTORY_BUTTON] = pixReadMemBmp(ref_graybar_inventory_bmp, ref_graybar_inventory_bmp_size);
-    filter->banner_references[M_MAP_BUTTON] = pixReadMemBmp(ref_map_bmp, ref_map_bmp_size);
-    filter->banner_references[PAD_MAP_BUTTON] = pixReadMemBmp(ref_pad_map_bmp, ref_pad_map_bmp_size);
-    filter->banner_references[PAD_LOOTING_BUTTON] = pixReadMemBmp(ref_pad_looting_bmp, ref_pad_looting_bmp_size);
-    filter->banner_references[PAD_INVENTORY_BUTTON] = pixReadMemBmp(ref_pad_inventory_bmp, ref_pad_inventory_bmp_size);
-    filter->banner_references[PAD_TACTICAL_BUTTON] = pixReadMemBmp(ref_pad_tactical_bmp, ref_pad_tactical_bmp_size);
-
-    filter->pg_references[BLOODHOUND] = pixReadMemBmp(game_bloodhound_bmp, game_bloodhound_bmp_size);
-    filter->pg_references[GIBRALTAR] = pixReadMemBmp(game_gibraltar_bmp, game_gibraltar_bmp_size);
-    filter->pg_references[LIFELINE] = pixReadMemBmp(game_lifeline_bmp, game_lifeline_bmp_size);
-    filter->pg_references[PATHFINDER] = pixReadMemBmp(game_pathfinder_bmp, game_pathfinder_bmp_size);
-    filter->pg_references[WRAITH] = pixReadMemBmp(game_wraith_bmp, game_wraith_bmp_size);
-    filter->pg_references[BANGALORE] = pixReadMemBmp(game_bangalore_bmp, game_bangalore_bmp_size);
-    filter->pg_references[CAUSTIC] = pixReadMemBmp(game_caustic_bmp, game_caustic_bmp_size);
-    filter->pg_references[MIRAGE] = pixReadMemBmp(game_mirage_bmp, game_mirage_bmp_size);
-    filter->pg_references[OCTANE] = pixReadMemBmp(game_octane_bmp, game_octane_bmp_size);
-    filter->pg_references[WATTSON] = pixReadMemBmp(game_wattson_bmp, game_wattson_bmp_size);
-    filter->pg_references[CRYPTO] = pixReadMemBmp(game_crypto_bmp, game_crypto_bmp_size);
-    filter->pg_references[REVENANT] = pixReadMemBmp(game_revenant_bmp, game_revenant_bmp_size);
-    filter->pg_references[LOBA] = pixReadMemBmp(game_loba_bmp, game_loba_bmp_size);
-    filter->pg_references[RAMPART] = pixReadMemBmp(game_rampart_bmp, game_rampart_bmp_size);
-    filter->pg_references[HORIZON] = pixReadMemBmp(game_horizon_bmp, game_horizon_bmp_size);
-    filter->pg_references[FUSE] = pixReadMemBmp(game_fuse_bmp, game_fuse_bmp_size);
-    filter->pg_references[VALKYRIE] = pixReadMemBmp(game_valkyrie_bmp, game_valkyrie_bmp_size);
-    filter->pg_references[SEER] = pixReadMemBmp(game_seer_bmp, game_seer_bmp_size);
-    filter->pg_references[ASH] = pixReadMemBmp(game_ash_bmp, game_ash_bmp_size);
-    filter->pg_references[MADMAGGIE] = pixReadMemBmp(game_madmaggie_bmp, game_madmaggie_bmp_size);
-    filter->pg_references[NEWCASTLE] = pixReadMemBmp(game_newcastle_bmp, game_newcastle_bmp_size);
-    filter->pg_references[VANTAGE] = pixReadMemBmp(game_vantage_bmp, game_vantage_bmp_size);
-    filter->pg_references[CATALYST] = pixReadMemBmp(game_catalyst_bmp, game_catalyst_bmp_size);
+    load_1080p_references(filter);
 
     filter->debug_mode = false;
     filter->debug_counter = 0;
+
+    filter->display = DISPLAY_RESOLUTIONS;
 
     apex_game_filter_update(filter, settings);
 
@@ -895,11 +940,13 @@ static void apex_game_filter_destroy(void *data)
 
     pixDestroy(&filter->image);
 
-    for (enum area_name an = 0; an < AREAS_NUM; an++)
-        pixDestroy(&filter->banner_references[an]);
+    for (enum display_resolution ds = 0; ds < DISPLAY_RESOLUTIONS; ds++)
+        for (enum area_name an = 0; an < AREAS_NUM; an++)
+            pixDestroy(&filter->banner_references[ds][an]);
 
-    for (character_name_t pg = 0; pg < CHARACTERS_NUM; pg++)
-        pixDestroy(&filter->pg_references[pg]);
+    for (enum display_resolution ds = 0; ds < DISPLAY_RESOLUTIONS; ds++)
+        for (character_name_t pg = 0; pg < CHARACTERS_NUM; pg++)
+            pixDestroy(&filter->pg_references[ds][pg]);
 
     obs_remove_main_render_callback(apex_game_filter_offscreen_render, filter);
 
@@ -944,6 +991,11 @@ static void apex_game_filter_tick(void *data, float seconds)
 
         filter->width = width;
         filter->height = height;
+
+        if (filter->width == 1920 && filter->height == 1080)
+            filter->display = DISPLAY_1080P;
+        else
+            filter->display = DISPLAY_RESOLUTIONS;
     }
 }
 
