@@ -133,6 +133,14 @@ enum input_device
     INPUT_DEVICES_NUM
 };
 
+enum game_language
+{
+    LANGUAGE_IT,
+    LANGUAGE_EN,
+
+    LANGUAGES
+};
+
 struct area
 {
     uint32_t x;
@@ -154,6 +162,7 @@ struct apex_game_filter_context
     uint32_t width;
     uint32_t height;
     enum input_device input;
+    enum game_language language;
     gs_texrender_t *texrender;
     gs_stagesurf_t *stagesurface;
     bool closing;
@@ -729,6 +738,11 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
     if (!gs_stagesurface_map(filter->stagesurface, &filter->video_data, &filter->video_linesize))
         return;
 
+    if (filter->language == LANGUAGE_EN)
+        filter->areas = areas_en;
+    else if (filter->language == LANGUAGE_IT)
+        filter->areas = areas_it;
+
     if (filter->input == MOUSE_AND_KEYBOARD)
         match_mk(filter);
     else if (filter->input == PLAY_STATION_PAD)
@@ -783,11 +797,11 @@ static void apex_game_filter_update(void *data, obs_data_t *settings)
     const char *game_lang = obs_data_get_string(settings, "game_lang");
 
     if (strcmp(game_lang, "it") == 0)
-        filter->areas = areas_it;
+        filter->language = LANGUAGE_IT;
     else if (strcmp(game_lang, "en") == 0)
-        filter->areas = areas_en;
+        filter->language = LANGUAGE_EN;
     else
-        filter->areas = areas_en;
+        filter->language = LANGUAGE_EN;
 
     const char *game_input = obs_data_get_string(settings, "game_input");
 
