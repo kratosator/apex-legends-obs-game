@@ -234,8 +234,7 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define PAD_INVENTORY_BUTTON_W          24
 #define PAD_INVENTORY_BUTTON_H          20
 
-#define PAD_TACTICAL_BUTTON_X_IT        604
-#define PAD_TACTICAL_BUTTON_X_EN        604
+#define PAD_TACTICAL_BUTTON_X           604
 #define PAD_TACTICAL_BUTTON_Y           1040
 #define PAD_TACTICAL_BUTTON_W           22
 #define PAD_TACTICAL_BUTTON_H           12
@@ -252,7 +251,7 @@ static const area_t areas_1080p_en[AREAS_NUM] =
     [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_X,             PAD_MAP_BUTTON_Y,           PAD_MAP_BUTTON_W,           PAD_MAP_BUTTON_H            },
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_EN,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_EN,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
-    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X_IT,     PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
 };
 
 static const area_t areas_1080p_it[AREAS_NUM] =
@@ -267,7 +266,7 @@ static const area_t areas_1080p_it[AREAS_NUM] =
     [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_X,             PAD_MAP_BUTTON_Y,           PAD_MAP_BUTTON_W,           PAD_MAP_BUTTON_H            },
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_IT,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_IT,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
-    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X_IT,     PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
 };
 
 static void debug_step(apex_game_filter_context_t *filter)
