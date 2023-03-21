@@ -222,8 +222,8 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define PAD_MAP_BUTTON_W                52
 #define PAD_MAP_BUTTON_H                51
 
-#define PAD_LOOTING_BUTTON_X_IT         525
-#define PAD_LOOTING_BUTTON_X_EN         536
+#define PAD_LOOTING_BUTTON_X_IT         533
+#define PAD_LOOTING_BUTTON_X_EN         544
 #define PAD_LOOTING_BUTTON_Y            968
 #define PAD_LOOTING_BUTTON_W            24
 #define PAD_LOOTING_BUTTON_H            20
@@ -582,7 +582,7 @@ int match_offsets[DISPLAY_RESOLUTIONS][AREAS_NUM] =
     {
         [M_MAP_BUTTON] =            -2,
         [PAD_MAP_BUTTON] =          -2,
-        [PAD_LOOTING_BUTTON] =      8,
+        [PAD_LOOTING_BUTTON] =      -8,
         [PAD_INVENTORY_BUTTON] =    -8
     },
 };
