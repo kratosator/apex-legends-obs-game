@@ -110,7 +110,7 @@ enum area_name
 };
 typedef enum area_name area_name_t;
 
-const char *area_name_str[] =
+const char *area_name_str[AREAS_NUM] =
 {
     "MAP_GAME_BUTTON",
     "GRENADE_GAME_BUTTON",
