@@ -136,6 +136,7 @@ enum input_device
 enum display_resolution
 {
     DISPLAY_1080P,
+    DISPLAY_2K,
 
     DISPLAY_RESOLUTIONS
 };
@@ -244,6 +245,69 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define PAD_TACTICAL_BUTTON_W           22
 #define PAD_TACTICAL_BUTTON_H           12
 
+#define MAP_GAME_BUTTON_2K_X            69
+#define MAP_GAME_BUTTON_2K_Y            35
+#define MAP_GAME_BUTTON_2K_W            27
+#define MAP_GAME_BUTTON_2K_H            26
+
+#define GRENADE_GAME_BUTTON_2K_X        1889
+#define GRENADE_GAME_BUTTON_2K_Y        1380
+#define GRENADE_GAME_BUTTON_2K_W        27
+#define GRENADE_GAME_BUTTON_2K_H        27
+
+#define ESC_LOOTING_BUTTON_2K_X_IT      686
+#define ESC_LOOTING_BUTTON_2K_X_EN      701
+#define ESC_LOOTING_BUTTON_2K_X_ZH      736
+#define ESC_LOOTING_BUTTON_2K_Y         1286
+#define ESC_LOOTING_BUTTON_2K_W         59
+#define ESC_LOOTING_BUTTON_2K_H         36
+
+#define ESC_INVENTORY_BUTTON_2K_X_IT    109
+#define ESC_INVENTORY_BUTTON_2K_X_EN    83
+#define ESC_INVENTORY_BUTTON_2K_X_ZH    76
+#define ESC_INVENTORY_BUTTON_2K_Y       1379
+#define ESC_INVENTORY_BUTTON_2K_W       62
+#define ESC_INVENTORY_BUTTON_2K_H       38
+
+#define GRAYBAR_INVENTORY_BUTTON_2K_X   219
+#define GRAYBAR_INVENTORY_BUTTON_2K_Y   1117
+#define GRAYBAR_INVENTORY_BUTTON_2K_W   300
+#define GRAYBAR_INVENTORY_BUTTON_2K_H   1
+
+#define M_MAP_BUTTON_2K_X               83
+#define M_MAP_BUTTON_2K_Y               1382
+#define M_MAP_BUTTON_2K_W               31
+#define M_MAP_BUTTON_2K_H               31
+
+#define PG_BANNER_IMAGE_2K_X            146
+#define PG_BANNER_IMAGE_2K_Y            1300
+#define PG_BANNER_IMAGE_2K_W            30
+#define PG_BANNER_IMAGE_2K_H            40
+
+#define PAD_MAP_BUTTON_2K_X             73
+#define PAD_MAP_BUTTON_2K_Y             1370
+#define PAD_MAP_BUTTON_2K_W             68
+#define PAD_MAP_BUTTON_2K_H             55
+
+#define PAD_LOOTING_BUTTON_2K_X_IT      711
+#define PAD_LOOTING_BUTTON_2K_X_EN      726
+#define PAD_LOOTING_BUTTON_2K_X_ZH      740
+#define PAD_LOOTING_BUTTON_2K_Y         1291
+#define PAD_LOOTING_BUTTON_2K_W         29
+#define PAD_LOOTING_BUTTON_2K_H         26
+
+#define PAD_INVENTORY_BUTTON_2K_X_IT    126
+#define PAD_INVENTORY_BUTTON_2K_X_EN    100
+#define PAD_INVENTORY_BUTTON_2K_X_ZH    93
+#define PAD_INVENTORY_BUTTON_2K_Y       1385
+#define PAD_INVENTORY_BUTTON_2K_W       26
+#define PAD_INVENTORY_BUTTON_2K_H       26
+
+#define PAD_TACTICAL_BUTTON_2K_X        807
+#define PAD_TACTICAL_BUTTON_2K_Y        1385
+#define PAD_TACTICAL_BUTTON_2K_W        26
+#define PAD_TACTICAL_BUTTON_2K_H        18
+
 static const area_t areas_1080p_en[AREAS_NUM] =
 {
     [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_X,            MAP_GAME_BUTTON_Y,          MAP_GAME_BUTTON_W,          MAP_GAME_BUTTON_H           },
@@ -287,6 +351,51 @@ static const area_t areas_1080p_zh[AREAS_NUM] =
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_ZH,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_ZH,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
     [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
+};
+
+static const area_t areas_2k_en[AREAS_NUM] =
+{
+    [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_2K_X,             MAP_GAME_BUTTON_2K_Y,           MAP_GAME_BUTTON_2K_W,           MAP_GAME_BUTTON_2K_H            },
+    [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_2K_X,         GRENADE_GAME_BUTTON_2K_Y,       GRENADE_GAME_BUTTON_2K_W,       GRENADE_GAME_BUTTON_2K_H        },
+    [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_2K_X_EN,       ESC_LOOTING_BUTTON_2K_Y,        ESC_LOOTING_BUTTON_2K_W,        ESC_LOOTING_BUTTON_2K_H         },
+    [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_2K_X_EN,     ESC_INVENTORY_BUTTON_2K_Y,      ESC_INVENTORY_BUTTON_2K_W,      ESC_INVENTORY_BUTTON_2K_H       },
+    [GRAYBAR_INVENTORY_BUTTON] ={ GRAYBAR_INVENTORY_BUTTON_2K_X,    GRAYBAR_INVENTORY_BUTTON_2K_Y,  GRAYBAR_INVENTORY_BUTTON_2K_W,  GRAYBAR_INVENTORY_BUTTON_2K_H   },
+    [M_MAP_BUTTON] =            { M_MAP_BUTTON_2K_X,                M_MAP_BUTTON_2K_Y,              M_MAP_BUTTON_2K_W,              M_MAP_BUTTON_2K_H               },
+    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_2K_X,             PG_BANNER_IMAGE_2K_Y,           PG_BANNER_IMAGE_2K_W,           PG_BANNER_IMAGE_2K_H            },
+    [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_2K_X,              PAD_MAP_BUTTON_2K_Y,            PAD_MAP_BUTTON_2K_W,            PAD_MAP_BUTTON_2K_H             },
+    [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_2K_X_EN,       PAD_LOOTING_BUTTON_2K_Y,        PAD_LOOTING_BUTTON_2K_W,        PAD_LOOTING_BUTTON_2K_H         },
+    [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_2K_X_EN,     PAD_INVENTORY_BUTTON_2K_Y,      PAD_INVENTORY_BUTTON_2K_W,      PAD_INVENTORY_BUTTON_2K_H       },
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_2K_X,         PAD_TACTICAL_BUTTON_2K_Y,       PAD_TACTICAL_BUTTON_2K_W,       PAD_TACTICAL_BUTTON_2K_H        }
+};
+
+static const area_t areas_2k_it[AREAS_NUM] =
+{
+    [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_2K_X,             MAP_GAME_BUTTON_2K_Y,           MAP_GAME_BUTTON_2K_W,           MAP_GAME_BUTTON_2K_H            },
+    [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_2K_X,         GRENADE_GAME_BUTTON_2K_Y,       GRENADE_GAME_BUTTON_2K_W,       GRENADE_GAME_BUTTON_2K_H        },
+    [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_2K_X_IT,       ESC_LOOTING_BUTTON_2K_Y,        ESC_LOOTING_BUTTON_2K_W,        ESC_LOOTING_BUTTON_2K_H         },
+    [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_2K_X_IT,     ESC_INVENTORY_BUTTON_2K_Y,      ESC_INVENTORY_BUTTON_2K_W,      ESC_INVENTORY_BUTTON_2K_H       },
+    [GRAYBAR_INVENTORY_BUTTON] ={ GRAYBAR_INVENTORY_BUTTON_2K_X,    GRAYBAR_INVENTORY_BUTTON_2K_Y,  GRAYBAR_INVENTORY_BUTTON_2K_W,  GRAYBAR_INVENTORY_BUTTON_2K_H   },
+    [M_MAP_BUTTON] =            { M_MAP_BUTTON_2K_X,                M_MAP_BUTTON_2K_Y,              M_MAP_BUTTON_2K_W,              M_MAP_BUTTON_2K_H               },
+    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_2K_X,             PG_BANNER_IMAGE_2K_Y,           PG_BANNER_IMAGE_2K_W,           PG_BANNER_IMAGE_2K_H            },
+    [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_2K_X,              PAD_MAP_BUTTON_2K_Y,            PAD_MAP_BUTTON_2K_W,            PAD_MAP_BUTTON_2K_H             },
+    [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_2K_X_IT,       PAD_LOOTING_BUTTON_2K_Y,        PAD_LOOTING_BUTTON_2K_W,        PAD_LOOTING_BUTTON_2K_H         },
+    [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_2K_X_IT,     PAD_INVENTORY_BUTTON_2K_Y,      PAD_INVENTORY_BUTTON_2K_W,      PAD_INVENTORY_BUTTON_2K_H       },
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_2K_X,         PAD_TACTICAL_BUTTON_2K_Y,       PAD_TACTICAL_BUTTON_2K_W,       PAD_TACTICAL_BUTTON_2K_H        }
+};
+
+static const area_t areas_2k_zh[AREAS_NUM] =
+{
+    [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_2K_X,             MAP_GAME_BUTTON_2K_Y,           MAP_GAME_BUTTON_2K_W,           MAP_GAME_BUTTON_2K_H            },
+    [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_2K_X,         GRENADE_GAME_BUTTON_2K_Y,       GRENADE_GAME_BUTTON_2K_W,       GRENADE_GAME_BUTTON_2K_H        },
+    [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_2K_X_ZH,       ESC_LOOTING_BUTTON_2K_Y,        ESC_LOOTING_BUTTON_2K_W,        ESC_LOOTING_BUTTON_2K_H         },
+    [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_2K_X_ZH,     ESC_INVENTORY_BUTTON_2K_Y,      ESC_INVENTORY_BUTTON_2K_W,      ESC_INVENTORY_BUTTON_2K_H       },
+    [GRAYBAR_INVENTORY_BUTTON] ={ GRAYBAR_INVENTORY_BUTTON_2K_X,    GRAYBAR_INVENTORY_BUTTON_2K_Y,  GRAYBAR_INVENTORY_BUTTON_2K_W,  GRAYBAR_INVENTORY_BUTTON_2K_H   },
+    [M_MAP_BUTTON] =            { M_MAP_BUTTON_2K_X,                M_MAP_BUTTON_2K_Y,              M_MAP_BUTTON_2K_W,              M_MAP_BUTTON_2K_H               },
+    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_2K_X,             PG_BANNER_IMAGE_2K_Y,           PG_BANNER_IMAGE_2K_W,           PG_BANNER_IMAGE_2K_H            },
+    [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_2K_X,              PAD_MAP_BUTTON_2K_Y,            PAD_MAP_BUTTON_2K_W,            PAD_MAP_BUTTON_2K_H             },
+    [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_2K_X_ZH,       PAD_LOOTING_BUTTON_2K_Y,        PAD_LOOTING_BUTTON_2K_W,        PAD_LOOTING_BUTTON_2K_H         },
+    [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_2K_X_ZH,     PAD_INVENTORY_BUTTON_2K_Y,      PAD_INVENTORY_BUTTON_2K_W,      PAD_INVENTORY_BUTTON_2K_H       },
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_2K_X,         PAD_TACTICAL_BUTTON_2K_Y,       PAD_TACTICAL_BUTTON_2K_W,       PAD_TACTICAL_BUTTON_2K_H        }
 };
 
 static void debug_step(apex_game_filter_context_t *filter)
@@ -460,11 +569,21 @@ static character_name_t get_pg_showed(apex_game_filter_context_t *filter)
 #define BOX_WIDTH           260
 #define BOX_HEIGHT          185
 
+#define BOX_START_2K_X      370
+#define BOX_START_2K_Y      1030
+#define BOX_WIDTH_2K        375
+#define BOX_HEIGHT_2K       275
+
 #define MIN_LINE_LENGTH     75
+#define MIN_LINE_LENGTH_2K  100
 
 #define GRAY_LINE_BANNER_DEFAULT_Y          926
 #define GRAY_LINE_BANNER_DEFAULT_X_END      450
 #define GRAY_LINE_BANNER_DEFAULT_DIFF       87
+
+#define GRAY_LINE_BANNER_2K_DEFAULT_Y       1234
+#define GRAY_LINE_BANNER_2K_DEFAULT_X_END   617
+#define GRAY_LINE_BANNER_2K_DEFAULT_DIFF    116
 
 #define GRAY_POINT          150
 #define GRAY_MAX_DIFF       15
@@ -487,6 +606,7 @@ struct gray_line_searcher_ref
 const struct gray_line_searcher_ref line_searches[DISPLAY_RESOLUTIONS] =
 {
     [DISPLAY_1080P] =   { BOX_START_X,      BOX_START_Y,    BOX_WIDTH,      BOX_HEIGHT,     MIN_LINE_LENGTH,    GRAY_LINE_BANNER_DEFAULT_Y,     GRAY_LINE_BANNER_DEFAULT_X_END,     GRAY_LINE_BANNER_DEFAULT_DIFF       },
+    [DISPLAY_2K] =      { BOX_START_2K_X,   BOX_START_2K_Y, BOX_WIDTH_2K,   BOX_HEIGHT_2K,  MIN_LINE_LENGTH_2K, GRAY_LINE_BANNER_2K_DEFAULT_Y,  GRAY_LINE_BANNER_2K_DEFAULT_X_END,  GRAY_LINE_BANNER_2K_DEFAULT_DIFF    },
 };
 
 static bool check_rgb(int r, int g, int b)
@@ -603,6 +723,14 @@ int match_offsets[DISPLAY_RESOLUTIONS][AREAS_NUM] =
         [PAD_LOOTING_BUTTON] =      -8,
         [PAD_INVENTORY_BUTTON] =    -8,
         [ESC_INVENTORY_BUTTON] =    -8,
+    },
+    [DISPLAY_2K] =
+    {
+        [M_MAP_BUTTON] =            -3,
+        [PAD_MAP_BUTTON] =          -3,
+        [PAD_LOOTING_BUTTON] =      -11,
+        [PAD_INVENTORY_BUTTON] =    -11,
+        [ESC_INVENTORY_BUTTON] =    -11,
     },
 };
 
@@ -802,6 +930,13 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
             filter->areas = areas_1080p_it;
         else if (filter->language == LANGUAGE_ZH)
             filter->areas = areas_1080p_zh;
+    } else if (filter->display == DISPLAY_2K) {
+        if (filter->language == LANGUAGE_EN)
+            filter->areas = areas_2k_en;
+        else if (filter->language == LANGUAGE_IT)
+            filter->areas = areas_2k_it;
+        else if (filter->language == LANGUAGE_ZH)
+            filter->areas = areas_2k_zh;
     }
 
     if (filter->input == MOUSE_AND_KEYBOARD)
@@ -919,6 +1054,44 @@ static void load_1080p_references(apex_game_filter_context_t *filter)
     filter->pg_references[DISPLAY_1080P][CATALYST] = pixReadMemBmp(game_catalyst_bmp, game_catalyst_bmp_size);
 }
 
+static void load_2k_references(apex_game_filter_context_t *filter)
+{
+    filter->banner_references[DISPLAY_2K][MAP_GAME_BUTTON] = pixReadMemBmp(ref_game_map_2k_bmp, ref_game_map_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][GRENADE_GAME_BUTTON] = pixReadMemBmp(ref_game_grenade_2k_bmp, ref_game_grenade_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][ESC_LOOTING_BUTTON] = pixReadMemBmp(ref_looting_2k_bmp, ref_looting_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][ESC_INVENTORY_BUTTON] = pixReadMemBmp(ref_inventory_2k_bmp, ref_inventory_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][GRAYBAR_INVENTORY_BUTTON] = pixReadMemBmp(ref_graybar_inventory_2k_bmp, ref_graybar_inventory_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][M_MAP_BUTTON] = pixReadMemBmp(ref_map_2k_bmp, ref_map_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][PAD_MAP_BUTTON] = pixReadMemBmp(ref_pad_map_2k_bmp, ref_pad_map_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][PAD_LOOTING_BUTTON] = pixReadMemBmp(ref_pad_looting_2k_bmp, ref_pad_looting_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][PAD_INVENTORY_BUTTON] = pixReadMemBmp(ref_pad_inventory_2k_bmp, ref_pad_inventory_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][PAD_TACTICAL_BUTTON] = pixReadMemBmp(ref_pad_tactical_2k_bmp, ref_pad_tactical_2k_bmp_size);
+
+    filter->pg_references[DISPLAY_2K][BLOODHOUND] = pixReadMemBmp(game_bloodhound_2k_bmp, game_bloodhound_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][GIBRALTAR] = pixReadMemBmp(game_gibraltar_2k_bmp, game_gibraltar_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][LIFELINE] = pixReadMemBmp(game_lifeline_2k_bmp, game_lifeline_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][PATHFINDER] = pixReadMemBmp(game_pathfinder_2k_bmp, game_pathfinder_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][WRAITH] = pixReadMemBmp(game_wraith_2k_bmp, game_wraith_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][BANGALORE] = pixReadMemBmp(game_bangalore_2k_bmp, game_bangalore_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][CAUSTIC] = pixReadMemBmp(game_caustic_2k_bmp, game_caustic_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][MIRAGE] = pixReadMemBmp(game_mirage_2k_bmp, game_mirage_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][OCTANE] = pixReadMemBmp(game_octane_2k_bmp, game_octane_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][WATTSON] = pixReadMemBmp(game_wattson_2k_bmp, game_wattson_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][CRYPTO] = pixReadMemBmp(game_crypto_2k_bmp, game_crypto_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][REVENANT] = pixReadMemBmp(game_revenant_2k_bmp, game_revenant_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][LOBA] = pixReadMemBmp(game_loba_2k_bmp, game_loba_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][RAMPART] = pixReadMemBmp(game_rampart_2k_bmp, game_rampart_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][HORIZON] = pixReadMemBmp(game_horizon_2k_bmp, game_horizon_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][FUSE] = pixReadMemBmp(game_fuse_2k_bmp, game_fuse_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][VALKYRIE] = pixReadMemBmp(game_valkyrie_2k_bmp, game_valkyrie_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][SEER] = pixReadMemBmp(game_seer_2k_bmp, game_seer_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][ASH] = pixReadMemBmp(game_ash_2k_bmp, game_ash_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][MADMAGGIE] = pixReadMemBmp(game_madmaggie_2k_bmp, game_madmaggie_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][NEWCASTLE] = pixReadMemBmp(game_newcastle_2k_bmp, game_newcastle_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][VANTAGE] = pixReadMemBmp(game_vantage_2k_bmp, game_vantage_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][CATALYST] = pixReadMemBmp(game_catalyst_2k_bmp, game_catalyst_2k_bmp_size);
+}
+
 static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
 {
     binfo("creating new filter");
@@ -928,9 +1101,10 @@ static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
     filter->source = source;
     filter->texrender = gs_texrender_create(GS_RGBA, GS_ZS_NONE);
 
-    filter->image = pixCreate(1920, 1080, 32);
+    filter->image = pixCreate(2560, 1440, 32);
 
     load_1080p_references(filter);
+    load_2k_references(filter);
 
     filter->debug_mode = false;
     filter->debug_counter = 0;
@@ -1017,6 +1191,8 @@ static void apex_game_filter_tick(void *data, float seconds)
 
         if (filter->width == 1920 && filter->height == 1080)
             filter->display = DISPLAY_1080P;
+        else if (filter->width == 2560 && filter->height == 1440)
+            filter->display = DISPLAY_2K;
         else
             filter->display = DISPLAY_RESOLUTIONS;
 
