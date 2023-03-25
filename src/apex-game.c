@@ -990,8 +990,6 @@ static void apex_game_filter_tick(void *data, float seconds)
     height += (height & 1);
 
     if (filter->width != width || filter->height != height) {
-        bdebug("new size, width: %d, height: %d", width, height);
-
         filter->width = width;
         filter->height = height;
 
@@ -999,6 +997,8 @@ static void apex_game_filter_tick(void *data, float seconds)
             filter->display = DISPLAY_1080P;
         else
             filter->display = DISPLAY_RESOLUTIONS;
+
+        binfo("new size, %dx%d, display %d", width, height, filter->display);
     }
 }
 
