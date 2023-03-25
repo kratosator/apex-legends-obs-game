@@ -144,6 +144,7 @@ enum game_language
 {
     LANGUAGE_IT,
     LANGUAGE_EN,
+    LANGUAGE_ZH,
 
     LANGUAGES
 };
@@ -192,12 +193,14 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 
 #define ESC_LOOTING_BUTTON_X_IT         516
 #define ESC_LOOTING_BUTTON_X_EN         527
+#define ESC_LOOTING_BUTTON_X_ZH         545
 #define ESC_LOOTING_BUTTON_Y            965
 #define ESC_LOOTING_BUTTON_W            43
 #define ESC_LOOTING_BUTTON_H            26
 
 #define ESC_INVENTORY_BUTTON_X_IT       81
 #define ESC_INVENTORY_BUTTON_X_EN       62
+#define ESC_INVENTORY_BUTTON_X_ZH       56
 #define ESC_INVENTORY_BUTTON_Y          1034
 #define ESC_INVENTORY_BUTTON_W          47
 #define ESC_INVENTORY_BUTTON_H          30
@@ -224,12 +227,14 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 
 #define PAD_LOOTING_BUTTON_X_IT         533
 #define PAD_LOOTING_BUTTON_X_EN         544
+#define PAD_LOOTING_BUTTON_X_ZH         563
 #define PAD_LOOTING_BUTTON_Y            968
 #define PAD_LOOTING_BUTTON_W            24
 #define PAD_LOOTING_BUTTON_H            20
 
 #define PAD_INVENTORY_BUTTON_X_IT       92
 #define PAD_INVENTORY_BUTTON_X_EN       73
+#define PAD_INVENTORY_BUTTON_X_ZH       67
 #define PAD_INVENTORY_BUTTON_Y          1039
 #define PAD_INVENTORY_BUTTON_W          24
 #define PAD_INVENTORY_BUTTON_H          20
@@ -266,6 +271,21 @@ static const area_t areas_1080p_it[AREAS_NUM] =
     [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_X,             PAD_MAP_BUTTON_Y,           PAD_MAP_BUTTON_W,           PAD_MAP_BUTTON_H            },
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_IT,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_IT,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
+};
+
+static const area_t areas_1080p_zh[AREAS_NUM] =
+{
+    [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_X,            MAP_GAME_BUTTON_Y,          MAP_GAME_BUTTON_W,          MAP_GAME_BUTTON_H           },
+    [GRENADE_GAME_BUTTON] =     { GRENADE_GAME_BUTTON_X,        GRENADE_GAME_BUTTON_Y,      GRENADE_GAME_BUTTON_W,      GRENADE_GAME_BUTTON_H       },
+    [ESC_LOOTING_BUTTON] =      { ESC_LOOTING_BUTTON_X_ZH,      ESC_LOOTING_BUTTON_Y,       ESC_LOOTING_BUTTON_W,       ESC_LOOTING_BUTTON_H        },
+    [ESC_INVENTORY_BUTTON] =    { ESC_INVENTORY_BUTTON_X_ZH,    ESC_INVENTORY_BUTTON_Y,     ESC_INVENTORY_BUTTON_W,     ESC_INVENTORY_BUTTON_H      },
+    [GRAYBAR_INVENTORY_BUTTON] ={ GRAYBAR_INVENTORY_BUTTON_X,   GRAYBAR_INVENTORY_BUTTON_Y, GRAYBAR_INVENTORY_BUTTON_W, GRAYBAR_INVENTORY_BUTTON_H  },
+    [M_MAP_BUTTON] =            { M_MAP_BUTTON_X,               M_MAP_BUTTON_Y,             M_MAP_BUTTON_W,             M_MAP_BUTTON_H              },
+    [PG_BANNER_IMAGE] =         { PG_BANNER_IMAGE_X,            PG_BANNER_IMAGE_Y,          PG_BANNER_IMAGE_W,          PG_BANNER_IMAGE_H           },
+    [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_X,             PAD_MAP_BUTTON_Y,           PAD_MAP_BUTTON_W,           PAD_MAP_BUTTON_H            },
+    [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_ZH,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
+    [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_ZH,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
     [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
 };
 
@@ -780,6 +800,8 @@ static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t 
             filter->areas = areas_1080p_en;
         else if (filter->language == LANGUAGE_IT)
             filter->areas = areas_1080p_it;
+        else if (filter->language == LANGUAGE_ZH)
+            filter->areas = areas_1080p_zh;
     }
 
     if (filter->input == MOUSE_AND_KEYBOARD)
@@ -839,6 +861,8 @@ static void apex_game_filter_update(void *data, obs_data_t *settings)
         filter->language = LANGUAGE_IT;
     else if (strcmp(game_lang, "en") == 0)
         filter->language = LANGUAGE_EN;
+    else if (strcmp(game_lang, "zh") == 0)
+        filter->language = LANGUAGE_ZH;
     else
         filter->language = LANGUAGE_EN;
 
@@ -1034,6 +1058,7 @@ static obs_properties_t *apex_game_filter_properties(void *data)
     p = obs_properties_add_list(group_1, "game_lang", "Game Language", OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
     obs_property_list_add_string(p, "Italiano", "it");
     obs_property_list_add_string(p, "English", "en");
+    obs_property_list_add_string(p, "简体中文", "zh");
 
     obs_properties_add_group(props, "sources", "Sources configuration", OBS_GROUP_NORMAL, group_2);
 
