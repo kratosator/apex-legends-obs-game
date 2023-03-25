@@ -15,7 +15,7 @@
 #define DEBUG_SAVE_PATH             "C:\\Temp"
 #define DEBUG_SAVE_PATH_NAME_LEN    128
 
-#define PSNR_THRESHOLD_VALUE        20
+#define PSNR_THRESHOLD_VALUE        16.5f
 
 #define write_log(log_level, format, ...) blog(log_level, "[apex-game] " format, ##__VA_ARGS__)
 
