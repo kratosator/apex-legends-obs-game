@@ -535,14 +535,12 @@ static bool find_banner_gray_lines(apex_game_filter_context_t *filter, struct gr
 
             if (count > ls->min_line_length) {
                 if (debug_should_print(filter))
-                    binfo("found line %d %d", y, lines[line].y);
+                    binfo("found line y:%d, length: %d", y, count);
 
-                bool line_found = lines[line].found;
-                bool line_dist_near_with_pred = y - lines[line-1].y;
                 bool line_first = line == 0;
+                bool line_dist_ok = !line_first && (lines[line-1].y - y) > 5;
 
-                if (!line_found ||
-                    (line_found && !line_first && !line_dist_near_with_pred)) {
+                if (line_first || line_dist_ok) {
                     lines[line].pixel_count = count;
                     lines[line].end_x = check_x;
                     lines[line].y = y;
