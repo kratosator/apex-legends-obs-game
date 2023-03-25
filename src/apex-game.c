@@ -583,7 +583,8 @@ int match_offsets[DISPLAY_RESOLUTIONS][AREAS_NUM] =
         [M_MAP_BUTTON] =            -2,
         [PAD_MAP_BUTTON] =          -2,
         [PAD_LOOTING_BUTTON] =      -8,
-        [PAD_INVENTORY_BUTTON] =    -8
+        [PAD_INVENTORY_BUTTON] =    -8,
+        [ESC_INVENTORY_BUTTON] =    -8,
     },
 };
 
@@ -609,7 +610,10 @@ static void match_mk(apex_game_filter_context_t *filter)
      * if inventory ESC button is found a further check must performed if inventory tab
      * is selected, otherwise in the other tabs player banner is not showed
      */
-    if (get_area_status(filter, ESC_INVENTORY_BUTTON)) {
+    bool esc_inventory_button = get_area_status(filter, ESC_INVENTORY_BUTTON);
+    bool esc_inventory_button_offset = get_area_status_withoffset(filter, ESC_INVENTORY_BUTTON, match_offsets[filter->display][ESC_INVENTORY_BUTTON]);
+    bool activate_inventory = esc_inventory_button || esc_inventory_button_offset;
+    if (activate_inventory) {
         if (get_area_status(filter, GRAYBAR_INVENTORY_BUTTON))
             set_source_status(filter->target_sources[BANNER_INVENTORY], true);
         else
