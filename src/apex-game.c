@@ -723,6 +723,7 @@ int match_offsets[DISPLAY_RESOLUTIONS][AREAS_NUM] =
         [PAD_LOOTING_BUTTON] =      -8,
         [PAD_INVENTORY_BUTTON] =    -8,
         [ESC_INVENTORY_BUTTON] =    -8,
+        [ESC_LOOTING_BUTTON] =      -8,
     },
     [DISPLAY_2K] =
     {
@@ -731,6 +732,7 @@ int match_offsets[DISPLAY_RESOLUTIONS][AREAS_NUM] =
         [PAD_LOOTING_BUTTON] =      -11,
         [PAD_INVENTORY_BUTTON] =    -11,
         [ESC_INVENTORY_BUTTON] =    -11,
+        [ESC_LOOTING_BUTTON] =      -11,
     },
 };
 
@@ -740,7 +742,11 @@ static void match_mk(apex_game_filter_context_t *filter)
      * if the area of interest matches the reference image we are
      * 100% sure that we can move to that scene
      */
-    check_banner(filter, ESC_LOOTING_BUTTON, BANNER_LOOTING);
+    bool esc_looting_button = get_area_status(filter, ESC_LOOTING_BUTTON);
+    bool esc_looting_button_offset = get_area_status_withoffset(filter, ESC_LOOTING_BUTTON, match_offsets[filter->display][ESC_LOOTING_BUTTON]);
+    bool activate_looting = esc_looting_button || esc_looting_button_offset;
+
+    set_source_status(filter->target_sources[BANNER_LOOTING], activate_looting);
 
     /*
      * checking map in control game mode moves the M button a little bit
