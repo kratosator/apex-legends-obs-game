@@ -2,21 +2,21 @@
 
 ## Features
 
- - Automatic recognition of in-game character  in all HUDs (in-game, inventory, looting, map view)
+ - Automatic recognition of in-game character in all HUDs (in-game, inventory, looting, map view, spectate)
  - Possibility to disable/enable sources depending on which HUD is currently displayed
  - Frame accurate character recognition and source activation/deactivation
- - Works with game language set to English/Italiano and resolution set to FullHD
+ - Works with game language set to English/Italiano/Chinese Simplified and resolution set to FullHD or 2K
 
 ## Description
 
 OBS plugin that allows stream customization targeted specifically to Apex Legends game. The plugin is a filter that can be applied on any source or scene.
 
-It allows, for example, to apply a character card overlay in the correct screen position depending on the HUD showed by the game. There are 4 HUDs where the player card is recognized: in-game, inventory, looting box, map view.
+It allows, for example, to apply a character card overlay in the correct screen position depending on the HUD showed by the game. There are 5 HUDs where the player card is recognized: in-game, inventory, looting box, map view, spectate.
 
-The plugin works recognizing elements of the HUD of the game to determine the current HUD showed. It works when using mouse and keyboard or a PS4 controller, other input devices may create problems. Currently it works only if these requirements are met
+The plugin works recognizing elements of the HUD of the game to determine the current HUD showed. It works when using mouse and keyboard or a PS4 controller, other input devices may create problems. Currently it works only if these requirements are met:
 
- - game's language set to either English or Italiano
- - screen's resolution set to 1920x1080
+ - game's language set to either English or Italiano or Chinese Simplified
+ - screen's resolution set to 1920x1080 or 2560x1440
 
 Other languages or resolutions may be supported on request.
 
@@ -36,7 +36,7 @@ Compile the plugin or download the latest release available. Place `apex-game.dl
 
 Configuration is pretty straight forward, apply the filter "Apex Game" on the source/scene that contains Apex Legends gameplay. Configure your input device and game's language and set sources in the menu, each source will be activated only when the corresponding HUD condition is showed in the game.
 
-[![Configuration example](https://i.imgur.com/Z6FT0l3.png)](https://i.imgur.com/Z6FT0l3.png)
+[![Configuration example](https://i.imgur.com/jrXFSvE.png)](https://i.imgur.com/jrXFSvE.png)
 
 ## Screenshots
 
