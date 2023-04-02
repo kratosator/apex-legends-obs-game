@@ -87,6 +87,7 @@ enum banner_position
     BANNER_LOOTING,
     BANNER_INVENTORY,
     BANNER_MAP,
+    BANNER_SPECTATE,
 
     BANNER_POSITION_NUM
 };
@@ -105,6 +106,10 @@ enum area_name
     PAD_LOOTING_BUTTON,
     PAD_INVENTORY_BUTTON,
     PAD_TACTICAL_BUTTON,
+    SPECTATE_IMAGE_RED,
+    SPECTATE_IMAGE_GREEN,
+    SPECTATE_IMAGE_ORANGE,
+    SPECTATE_IMAGE_BLUE,
 
     AREAS_NUM
 };
@@ -122,7 +127,11 @@ const char *area_name_str[AREAS_NUM] =
     "PAD_MAP_BUTTON",
     "PAD_LOOTING_BUTTON",
     "PAD_INVENTORY_BUTTON",
-    "PAD_TACTICAL_BUTTON"
+    "PAD_TACTICAL_BUTTON",
+    "SPECTATE_IMAGE_RED",
+    "SPECTATE_IMAGE_GREEN",
+    "SPECTATE_IMAGE_ORANGE",
+    "SPECTATE_IMAGE_BLUE",
 };
 
 enum input_device
@@ -245,6 +254,11 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define PAD_TACTICAL_BUTTON_W           22
 #define PAD_TACTICAL_BUTTON_H           12
 
+#define SPECTATE_IMAGE_X                1130
+#define SPECTATE_IMAGE_Y                1000
+#define SPECTATE_IMAGE_W                16
+#define SPECTATE_IMAGE_H                22
+
 #define MAP_GAME_BUTTON_2K_X            69
 #define MAP_GAME_BUTTON_2K_Y            35
 #define MAP_GAME_BUTTON_2K_W            27
@@ -308,6 +322,11 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define PAD_TACTICAL_BUTTON_2K_W        26
 #define PAD_TACTICAL_BUTTON_2K_H        18
 
+#define SPECTATE_IMAGE_2K_X             1508
+#define SPECTATE_IMAGE_2K_Y             1336
+#define SPECTATE_IMAGE_2K_W             22
+#define SPECTATE_IMAGE_2K_H             22
+
 static const area_t areas_1080p_en[AREAS_NUM] =
 {
     [MAP_GAME_BUTTON] =         { MAP_GAME_BUTTON_X,            MAP_GAME_BUTTON_Y,          MAP_GAME_BUTTON_W,          MAP_GAME_BUTTON_H           },
@@ -320,7 +339,11 @@ static const area_t areas_1080p_en[AREAS_NUM] =
     [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_X,             PAD_MAP_BUTTON_Y,           PAD_MAP_BUTTON_W,           PAD_MAP_BUTTON_H            },
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_EN,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_EN,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
-    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       },
+    [SPECTATE_IMAGE_RED] =      { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+    [SPECTATE_IMAGE_GREEN] =    { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+    [SPECTATE_IMAGE_ORANGE] =   { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+    [SPECTATE_IMAGE_BLUE] =     { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
 };
 
 static const area_t areas_1080p_it[AREAS_NUM] =
@@ -335,7 +358,11 @@ static const area_t areas_1080p_it[AREAS_NUM] =
     [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_X,             PAD_MAP_BUTTON_Y,           PAD_MAP_BUTTON_W,           PAD_MAP_BUTTON_H            },
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_IT,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_IT,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
-    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       },
+    [SPECTATE_IMAGE_RED] =      { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+    [SPECTATE_IMAGE_GREEN] =    { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+    [SPECTATE_IMAGE_ORANGE] =   { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+    [SPECTATE_IMAGE_BLUE] =     { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
 };
 
 static const area_t areas_1080p_zh[AREAS_NUM] =
@@ -350,7 +377,12 @@ static const area_t areas_1080p_zh[AREAS_NUM] =
     [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_X,             PAD_MAP_BUTTON_Y,           PAD_MAP_BUTTON_W,           PAD_MAP_BUTTON_H            },
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_X_ZH,      PAD_LOOTING_BUTTON_Y,       PAD_LOOTING_BUTTON_W,       PAD_LOOTING_BUTTON_H        },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_X_ZH,    PAD_INVENTORY_BUTTON_Y,     PAD_INVENTORY_BUTTON_W,     PAD_INVENTORY_BUTTON_H      },
-    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       }
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_X,        PAD_TACTICAL_BUTTON_Y,      PAD_TACTICAL_BUTTON_W,      PAD_TACTICAL_BUTTON_H       },
+    [SPECTATE_IMAGE_RED] =      { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+    [SPECTATE_IMAGE_GREEN] =    { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+    [SPECTATE_IMAGE_ORANGE] =   { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+    [SPECTATE_IMAGE_BLUE] =     { SPECTATE_IMAGE_X,             SPECTATE_IMAGE_Y,           SPECTATE_IMAGE_W,           SPECTATE_IMAGE_H            },
+
 };
 
 static const area_t areas_2k_en[AREAS_NUM] =
@@ -365,7 +397,11 @@ static const area_t areas_2k_en[AREAS_NUM] =
     [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_2K_X,              PAD_MAP_BUTTON_2K_Y,            PAD_MAP_BUTTON_2K_W,            PAD_MAP_BUTTON_2K_H             },
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_2K_X_EN,       PAD_LOOTING_BUTTON_2K_Y,        PAD_LOOTING_BUTTON_2K_W,        PAD_LOOTING_BUTTON_2K_H         },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_2K_X_EN,     PAD_INVENTORY_BUTTON_2K_Y,      PAD_INVENTORY_BUTTON_2K_W,      PAD_INVENTORY_BUTTON_2K_H       },
-    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_2K_X,         PAD_TACTICAL_BUTTON_2K_Y,       PAD_TACTICAL_BUTTON_2K_W,       PAD_TACTICAL_BUTTON_2K_H        }
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_2K_X,         PAD_TACTICAL_BUTTON_2K_Y,       PAD_TACTICAL_BUTTON_2K_W,       PAD_TACTICAL_BUTTON_2K_H        },
+    [SPECTATE_IMAGE_RED] =      { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
+    [SPECTATE_IMAGE_GREEN] =    { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
+    [SPECTATE_IMAGE_ORANGE] =   { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
+    [SPECTATE_IMAGE_BLUE] =     { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
 };
 
 static const area_t areas_2k_it[AREAS_NUM] =
@@ -380,7 +416,11 @@ static const area_t areas_2k_it[AREAS_NUM] =
     [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_2K_X,              PAD_MAP_BUTTON_2K_Y,            PAD_MAP_BUTTON_2K_W,            PAD_MAP_BUTTON_2K_H             },
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_2K_X_IT,       PAD_LOOTING_BUTTON_2K_Y,        PAD_LOOTING_BUTTON_2K_W,        PAD_LOOTING_BUTTON_2K_H         },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_2K_X_IT,     PAD_INVENTORY_BUTTON_2K_Y,      PAD_INVENTORY_BUTTON_2K_W,      PAD_INVENTORY_BUTTON_2K_H       },
-    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_2K_X,         PAD_TACTICAL_BUTTON_2K_Y,       PAD_TACTICAL_BUTTON_2K_W,       PAD_TACTICAL_BUTTON_2K_H        }
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_2K_X,         PAD_TACTICAL_BUTTON_2K_Y,       PAD_TACTICAL_BUTTON_2K_W,       PAD_TACTICAL_BUTTON_2K_H        },
+    [SPECTATE_IMAGE_RED] =      { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
+    [SPECTATE_IMAGE_GREEN] =    { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
+    [SPECTATE_IMAGE_ORANGE] =   { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
+    [SPECTATE_IMAGE_BLUE] =     { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
 };
 
 static const area_t areas_2k_zh[AREAS_NUM] =
@@ -395,7 +435,11 @@ static const area_t areas_2k_zh[AREAS_NUM] =
     [PAD_MAP_BUTTON] =          { PAD_MAP_BUTTON_2K_X,              PAD_MAP_BUTTON_2K_Y,            PAD_MAP_BUTTON_2K_W,            PAD_MAP_BUTTON_2K_H             },
     [PAD_LOOTING_BUTTON] =      { PAD_LOOTING_BUTTON_2K_X_ZH,       PAD_LOOTING_BUTTON_2K_Y,        PAD_LOOTING_BUTTON_2K_W,        PAD_LOOTING_BUTTON_2K_H         },
     [PAD_INVENTORY_BUTTON] =    { PAD_INVENTORY_BUTTON_2K_X_ZH,     PAD_INVENTORY_BUTTON_2K_Y,      PAD_INVENTORY_BUTTON_2K_W,      PAD_INVENTORY_BUTTON_2K_H       },
-    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_2K_X,         PAD_TACTICAL_BUTTON_2K_Y,       PAD_TACTICAL_BUTTON_2K_W,       PAD_TACTICAL_BUTTON_2K_H        }
+    [PAD_TACTICAL_BUTTON] =     { PAD_TACTICAL_BUTTON_2K_X,         PAD_TACTICAL_BUTTON_2K_Y,       PAD_TACTICAL_BUTTON_2K_W,       PAD_TACTICAL_BUTTON_2K_H        },
+    [SPECTATE_IMAGE_RED] =      { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
+    [SPECTATE_IMAGE_GREEN] =    { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
+    [SPECTATE_IMAGE_ORANGE] =   { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
+    [SPECTATE_IMAGE_BLUE] =     { SPECTATE_IMAGE_2K_X,              SPECTATE_IMAGE_2K_Y,            SPECTATE_IMAGE_2K_W,            SPECTATE_IMAGE_2K_H             },
 };
 
 static void debug_step(apex_game_filter_context_t *filter)
@@ -796,6 +840,20 @@ static void match_mk(apex_game_filter_context_t *filter)
     }
 
     set_source_status(filter->target_sources[BANNER_GAME], enable_banner_game);
+
+    /*
+     * spectate matching is done by checking a portion of the bottom center frame
+     * with the name of the spectating person.
+     * there are 4 different colors depending on who is spectating: red: enemy,
+     * orange/blue/green: team mate.
+     */
+    bool spectate_red = get_area_status(filter, SPECTATE_IMAGE_RED);
+    bool spectate_green = get_area_status(filter, SPECTATE_IMAGE_GREEN);
+    bool spectate_orange = get_area_status(filter, SPECTATE_IMAGE_ORANGE);
+    bool spectate_blue = get_area_status(filter, SPECTATE_IMAGE_BLUE);
+    bool activate_specatate = spectate_red || spectate_green || spectate_orange || spectate_blue;
+
+    set_source_status(filter->target_sources[BANNER_SPECTATE], activate_specatate);
 }
 
 static void match_ps4pad(apex_game_filter_context_t *filter)
@@ -860,6 +918,20 @@ static void match_ps4pad(apex_game_filter_context_t *filter)
     }
 
     set_source_status(filter->target_sources[BANNER_GAME], enable_banner_game);
+
+    /*
+     * spectate matching is done by checking a portion of the bottom center frame
+     * with the name of the spectating person.
+     * there are 4 different colors depending on who is spectating: red: enemy,
+     * orange/blue/green: team mate.
+     */
+    bool spectate_red = get_area_status(filter, SPECTATE_IMAGE_RED);
+    bool spectate_green = get_area_status(filter, SPECTATE_IMAGE_GREEN);
+    bool spectate_orange = get_area_status(filter, SPECTATE_IMAGE_ORANGE);
+    bool spectate_blue = get_area_status(filter, SPECTATE_IMAGE_BLUE);
+    bool activate_specatate = spectate_red || spectate_green || spectate_orange || spectate_blue;
+
+    set_source_status(filter->target_sources[BANNER_SPECTATE], activate_specatate);
 }
 
 static void apex_game_filter_offscreen_render(void *data, uint32_t cx, uint32_t cy)
@@ -993,6 +1065,7 @@ static void apex_game_filter_update(void *data, obs_data_t *settings)
     update_source(settings, "looting_source", &filter->target_sources[BANNER_LOOTING]);
     update_source(settings, "inventory_source", &filter->target_sources[BANNER_INVENTORY]);
     update_source(settings, "map_source", &filter->target_sources[BANNER_MAP]);
+    update_source(settings, "spectate_source", &filter->target_sources[BANNER_SPECTATE]);
 
     filter->debug_mode = obs_data_get_bool(settings, "debug_mode");
 
@@ -1034,6 +1107,10 @@ static void load_1080p_references(apex_game_filter_context_t *filter)
     filter->banner_references[DISPLAY_1080P][PAD_LOOTING_BUTTON] = pixReadMemBmp(ref_pad_looting_bmp, ref_pad_looting_bmp_size);
     filter->banner_references[DISPLAY_1080P][PAD_INVENTORY_BUTTON] = pixReadMemBmp(ref_pad_inventory_bmp, ref_pad_inventory_bmp_size);
     filter->banner_references[DISPLAY_1080P][PAD_TACTICAL_BUTTON] = pixReadMemBmp(ref_pad_tactical_bmp, ref_pad_tactical_bmp_size);
+    filter->banner_references[DISPLAY_1080P][SPECTATE_IMAGE_RED] = pixReadMemBmp(ref_spectate_red_bmp, ref_spectate_red_bmp_size);
+    filter->banner_references[DISPLAY_1080P][SPECTATE_IMAGE_GREEN] = pixReadMemBmp(ref_spectate_green_bmp, ref_spectate_green_bmp_size);
+    filter->banner_references[DISPLAY_1080P][SPECTATE_IMAGE_ORANGE] = pixReadMemBmp(ref_spectate_orange_bmp, ref_spectate_orange_bmp_size);
+    filter->banner_references[DISPLAY_1080P][SPECTATE_IMAGE_BLUE] = pixReadMemBmp(ref_spectate_blue_bmp, ref_spectate_blue_bmp_size);
 
     filter->pg_references[DISPLAY_1080P][BLOODHOUND] = pixReadMemBmp(game_bloodhound_bmp, game_bloodhound_bmp_size);
     filter->pg_references[DISPLAY_1080P][GIBRALTAR] = pixReadMemBmp(game_gibraltar_bmp, game_gibraltar_bmp_size);
@@ -1072,6 +1149,10 @@ static void load_2k_references(apex_game_filter_context_t *filter)
     filter->banner_references[DISPLAY_2K][PAD_LOOTING_BUTTON] = pixReadMemBmp(ref_pad_looting_2k_bmp, ref_pad_looting_2k_bmp_size);
     filter->banner_references[DISPLAY_2K][PAD_INVENTORY_BUTTON] = pixReadMemBmp(ref_pad_inventory_2k_bmp, ref_pad_inventory_2k_bmp_size);
     filter->banner_references[DISPLAY_2K][PAD_TACTICAL_BUTTON] = pixReadMemBmp(ref_pad_tactical_2k_bmp, ref_pad_tactical_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][SPECTATE_IMAGE_RED] = pixReadMemBmp(ref_spectate_red_2k_bmp, ref_spectate_red_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][SPECTATE_IMAGE_GREEN] = pixReadMemBmp(ref_spectate_green_2k_bmp, ref_spectate_green_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][SPECTATE_IMAGE_ORANGE] = pixReadMemBmp(ref_spectate_orange_2k_bmp, ref_spectate_orange_2k_bmp_size);
+    filter->banner_references[DISPLAY_2K][SPECTATE_IMAGE_BLUE] = pixReadMemBmp(ref_spectate_blue_2k_bmp, ref_spectate_blue_2k_bmp_size);
 
     filter->pg_references[DISPLAY_2K][BLOODHOUND] = pixReadMemBmp(game_bloodhound_2k_bmp, game_bloodhound_2k_bmp_size);
     filter->pg_references[DISPLAY_2K][GIBRALTAR] = pixReadMemBmp(game_gibraltar_2k_bmp, game_gibraltar_2k_bmp_size);
@@ -1254,6 +1335,9 @@ static obs_properties_t *apex_game_filter_properties(void *data)
     obs_enum_sources(list_add_sources, p);
 
     p = obs_properties_add_list(group_2, "map_source", "Game Map Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
+    obs_enum_sources(list_add_sources, p);
+
+    p = obs_properties_add_list(group_2, "spectate_source", "Spectate Source", OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
     obs_enum_sources(list_add_sources, p);
 
     obs_properties_add_bool(props, "debug_mode", "Enable debug messages");
