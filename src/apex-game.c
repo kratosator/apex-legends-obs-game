@@ -50,6 +50,9 @@ enum character_name
     VANTAGE,
     CATALYST,
     BALLISTIC,
+    CONDUIT,
+    ALTER,
+    SPARROW,
 
     CHARACTERS_NUM
 };
@@ -81,6 +84,9 @@ const char *character_name_str[CHARACTERS_NUM] =
     "vantage",
     "catalyst",
     "ballistic",
+    "conduit",
+    "alter",
+    "sparrow",
 };
 
 enum banner_position
@@ -1138,6 +1144,9 @@ static void load_1080p_references(apex_game_filter_context_t *filter)
     filter->pg_references[DISPLAY_1080P][VANTAGE] = pixReadMemBmp(game_vantage_bmp, game_vantage_bmp_size);
     filter->pg_references[DISPLAY_1080P][CATALYST] = pixReadMemBmp(game_catalyst_bmp, game_catalyst_bmp_size);
     filter->pg_references[DISPLAY_1080P][BALLISTIC] = pixReadMemBmp(game_ballistic_bmp, game_ballistic_bmp_size);
+    filter->pg_references[DISPLAY_1080P][CONDUIT] = pixReadMemBmp(game_conduit_bmp, game_conduit_bmp_size);
+    filter->pg_references[DISPLAY_1080P][ALTER] = pixReadMemBmp(game_alter_bmp, game_alter_bmp_size);
+    filter->pg_references[DISPLAY_1080P][SPARROW] = pixReadMemBmp(game_sparrow_bmp, game_sparrow_bmp_size);
 }
 
 static void load_2k_references(apex_game_filter_context_t *filter)
@@ -1181,6 +1190,9 @@ static void load_2k_references(apex_game_filter_context_t *filter)
     filter->pg_references[DISPLAY_2K][VANTAGE] = pixReadMemBmp(game_vantage_2k_bmp, game_vantage_2k_bmp_size);
     filter->pg_references[DISPLAY_2K][CATALYST] = pixReadMemBmp(game_catalyst_2k_bmp, game_catalyst_2k_bmp_size);
     filter->pg_references[DISPLAY_2K][BALLISTIC] = pixReadMemBmp(game_ballistic_2k_bmp, game_ballistic_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][CONDUIT] = pixReadMemBmp(game_conduit_2k_bmp, game_conduit_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][ALTER] = pixReadMemBmp(game_alter_2k_bmp, game_alter_2k_bmp_size);
+    filter->pg_references[DISPLAY_2K][SPARROW] = pixReadMemBmp(game_sparrow_2k_bmp, game_sparrow_2k_bmp_size);
 }
 
 static void *apex_game_filter_create(obs_data_t *settings, obs_source_t *source)
