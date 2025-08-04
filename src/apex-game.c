@@ -223,8 +223,8 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define ESC_INVENTORY_BUTTON_W          47
 #define ESC_INVENTORY_BUTTON_H          30
 
-#define GRAYBAR_INVENTORY_BUTTON_X      149
-#define GRAYBAR_INVENTORY_BUTTON_Y      839
+#define GRAYBAR_INVENTORY_BUTTON_X      201
+#define GRAYBAR_INVENTORY_BUTTON_Y      863
 #define GRAYBAR_INVENTORY_BUTTON_W      200
 #define GRAYBAR_INVENTORY_BUTTON_H      1
 
@@ -291,8 +291,8 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define ESC_INVENTORY_BUTTON_2K_W       62
 #define ESC_INVENTORY_BUTTON_2K_H       38
 
-#define GRAYBAR_INVENTORY_BUTTON_2K_X   219
-#define GRAYBAR_INVENTORY_BUTTON_2K_Y   1117
+#define GRAYBAR_INVENTORY_BUTTON_2K_X   275
+#define GRAYBAR_INVENTORY_BUTTON_2K_Y   1150
 #define GRAYBAR_INVENTORY_BUTTON_2K_W   300
 #define GRAYBAR_INVENTORY_BUTTON_2K_H   1
 
@@ -616,13 +616,13 @@ static character_name_t get_pg_showed(apex_game_filter_context_t *filter)
     return pg;
 }
 
-#define BOX_START_X         290
-#define BOX_START_Y         790
+#define BOX_START_X         310
+#define BOX_START_Y         820
 #define BOX_WIDTH           260
 #define BOX_HEIGHT          185
 
-#define BOX_START_2K_X      370
-#define BOX_START_2K_Y      1030
+#define BOX_START_2K_X      400
+#define BOX_START_2K_Y      1070
 #define BOX_WIDTH_2K        375
 #define BOX_HEIGHT_2K       275
 
