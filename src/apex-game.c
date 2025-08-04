@@ -233,10 +233,10 @@ typedef struct apex_game_filter_context apex_game_filter_context_t;
 #define M_MAP_BUTTON_W                  22
 #define M_MAP_BUTTON_H                  22
 
-#define PG_BANNER_IMAGE_X               110
-#define PG_BANNER_IMAGE_Y               970
-#define PG_BANNER_IMAGE_W               28
-#define PG_BANNER_IMAGE_H               36
+#define PG_BANNER_IMAGE_X               111
+#define PG_BANNER_IMAGE_Y               980
+#define PG_BANNER_IMAGE_W               30
+#define PG_BANNER_IMAGE_H               46
 
 #define PAD_MAP_BUTTON_X                55
 #define PAD_MAP_BUTTON_Y                1022
